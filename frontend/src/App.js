@@ -162,6 +162,77 @@ function App() {
     }
   };
 
+  // Check subscription status
+  const checkSubscriptionStatus = async () => {
+    try {
+      const response = await axios.get(`${API}/subscription-status`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      const status = response.data;
+      setSubscriptionStatus(status);
+      setIsBlocked(status.is_blocked);
+      
+      // If user is blocked, force to payment screen
+      if (status.is_blocked && currentScreen !== 'payment') {
+        setCurrentScreen('payment');
+        toast({
+          title: "Assinatura Vencida",
+          description: status.message,
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Failed to check subscription status:', error);
+      // If can't check status, assume blocked for safety
+      setIsBlocked(true);
+      if (currentScreen !== 'payment' && currentScreen !== 'login' && currentScreen !== 'register') {
+        setCurrentScreen('payment');
+      }
+    }
+  };
+
+  // Confirm payment and reactivate subscription
+  const confirmPayment = async () => {
+    try {
+      if (!subscriptionStatus) {
+        toast({
+          title: "Erro",
+          description: "Status da assinatura não encontrado",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      const response = await axios.post(`${API}/confirm-payment`, {
+        subscription_id: subscriptionStatus.subscription_id || 'temp',
+        payment_method: paymentForm.paymentMethod,
+        transaction_id: 'manual_confirmation_' + Date.now()
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      toast({
+        title: "Pagamento Confirmado!",
+        description: response.data.message
+      });
+      
+      // Refresh subscription status
+      await checkSubscriptionStatus();
+      
+      // Return to main screen if no longer blocked
+      if (!isBlocked) {
+        setCurrentScreen('main');
+      }
+    } catch (error) {
+      toast({
+        title: "Erro no pagamento",
+        description: error.response?.data?.detail || "Erro interno do servidor",
+        variant: "destructive"
+      });
+    }
+  };
+
   // Fetch alerts
   const fetchAlerts = async () => {
     try {
