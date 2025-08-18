@@ -463,6 +463,14 @@ async def create_subscription(
         # In production, this would integrate with Mercado Pago
         payment_response.payment_url = "link.mercadopago.com.br/hopez"
         payment_response.message = "Assinatura criada! Você terá 30 dias gratuitos. Cartão será cobrado após o período."
+    elif subscription_data.payment_method == "swift-wire":
+        # SWIFT Wire Transfer for international payments
+        payment_response.swift_code = "SAFEBR2SXXX"
+        payment_response.bank_name = "SafeZone International Bank"
+        payment_response.account_number = f"SZ-{subscription.id[:8].upper()}"
+        payment_response.beneficiary = "SafeZone Security Services"
+        payment_response.reference = f"SUB-{subscription.id[:12].upper()}"
+        payment_response.message = f"International SWIFT transfer details generated. Reference: {payment_response.reference}. Transfer will be processed after 30-day trial period."
     
     return payment_response
 
