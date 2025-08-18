@@ -107,51 +107,63 @@
 ## backend:
   - task: "Sistema de Autenticação (login/registro)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Sistema de auth implementado com JWT, precisa testar"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTADO COM SUCESSO: Registro de usuário funciona corretamente (POST /api/register), retorna JWT token válido. Login funciona (POST /api/login), autentica credenciais corretas e rejeita inválidas (401). Token JWT é validado corretamente em endpoints protegidos. Perfil do usuário é retornado corretamente com todos os campos necessários."
 
   - task: "Endpoint de Criação de Assinatura (/api/create-subscription)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Endpoint implementado com suporte a cartão, PIX e boleto. Precisa testar se está funcionando corretamente"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTADO COM SUCESSO: Todos os 3 métodos de pagamento funcionam: CARTÃO (retorna payment_url), PIX (retorna pix_code: 09b74dd4-64da-4563-b769-95cec83659f0), BOLETO (retorna boleto_url). Validação de negócio funciona: usuário não pode criar múltiplas assinaturas ativas (retorna 400). Campos obrigatórios: amount=R$30.00, is_trial=true, next_payment calculado corretamente (+30 dias)."
 
   - task: "Modelos de Dados (Subscription, PaymentResponse)"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "medium"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "Modelos Pydantic implementados para subscription e payment response"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTADO COM SUCESSO: Modelos Pydantic funcionam corretamente. PaymentResponse retorna campos corretos para cada método (payment_url para cartão, pix_code para PIX, boleto_url para boleto). Subscription model armazena todos os dados necessários com tipos corretos."
 
   - task: "Conexão MongoDB"
     implemented: true
-    working: "NA"
+    working: true
     file: "/app/backend/server.py"
     stuck_count: 0
     priority: "high"
-    needs_retesting: true
+    needs_retesting: false
     status_history:
         - working: "NA"
           agent: "main"
           comment: "MongoDB configurado, precisa testar conexão e operações"
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTADO COM SUCESSO: Conexão MongoDB funciona perfeitamente. Collections criadas automaticamente (users, subscriptions, alerts). Inserção e consulta de dados funcionam. Estrutura dos documentos está correta com todos os campos necessários. Dados persistem corretamente entre operações."
 
 ## frontend:
   - task: "Interface de Seleção de Método de Pagamento"
