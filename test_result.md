@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "Testar sistema de admin implementado no SafeZone"
+## user_problem_statement: "deixe o meu login de admin julio.csds@hotmail.com vitalicio, um email que não precisa de pagamento e é vip para sempre"
 
 ## backend:
   - task: "Sistema de Autenticação (login/registro)"
