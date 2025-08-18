@@ -777,10 +777,15 @@ async def send_help_message(
     current_user: User = Depends(get_current_user)
 ):
     """Send help message to SafeZone support"""
+    
+    # Create full address string
+    user_address = f"{current_user.street}, {current_user.number}, {current_user.neighborhood}, {getattr(current_user, 'city', 'São Paulo')} - {getattr(current_user, 'state', 'SP')}"
+    
     help_message = HelpMessage(
         user_id=current_user.id,
         user_name=current_user.name,
         user_email=current_user.email,
+        user_address=user_address,
         message=help_data.message
     )
     
