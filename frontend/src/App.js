@@ -1528,7 +1528,7 @@ function App() {
               
               <div className="mt-4 p-3 bg-orange-50 rounded-lg">
                 <p className="text-xs text-orange-700 text-center">
-                  ⚡ Acesso ao painel de controle, mensagens de suporte e gerenciamento de usuários
+                  ⚡ {t.adminDescription}
                 </p>
               </div>
             </CardContent>
