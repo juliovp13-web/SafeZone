@@ -16,7 +16,7 @@ import {
   Users, 
   BarChart3, 
   User, 
-  Mask, 
+  Eye, 
   AlertTriangle,
   LogOut,
   ArrowLeft,
