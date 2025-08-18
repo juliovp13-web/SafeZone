@@ -4,7 +4,7 @@ from datetime import datetime
 
 def test_pix_subscription():
     """Test PIX subscription creation with a new user"""
-    base_url = "https://admin-support-portal.preview.emergentagent.com"
+    base_url = "https://stoic-dewdney.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Create unique email for this test
@@ -66,7 +66,7 @@ def test_pix_subscription():
 
 def test_subscription_business_rules():
     """Test subscription business rules validation"""
-    base_url = "https://admin-support-portal.preview.emergentagent.com"
+    base_url = "https://stoic-dewdney.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     print("\n🔍 Testing Subscription Business Rules...")
