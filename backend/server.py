@@ -54,9 +54,11 @@ class UserCreate(BaseModel):
     name: str
     email: EmailStr
     password: str
+    state: str
+    city: str
+    neighborhood: str
     street: str
     number: str
-    neighborhood: str
     resident_names: List[str]
 
 class UserLogin(BaseModel):
@@ -67,9 +69,11 @@ class UserResponse(BaseModel):
     id: str
     name: str
     email: str
+    state: str
+    city: str
+    neighborhood: str
     street: str
     number: str
-    neighborhood: str
     resident_names: List[str]
     is_admin: bool = False
     is_vip: bool = False
