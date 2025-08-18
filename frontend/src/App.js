@@ -32,6 +32,20 @@ import './App.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
+// Country mappings to language and currency
+const countryMappings = {
+  'BRA': { lang: 'pt', currency: 'BRL', currencySymbol: 'R$', country: 'Brazil', paymentMethod: 'PIX/Boleto' },
+  'EUA': { lang: 'en', currency: 'USD', currencySymbol: '$', country: 'United States', paymentMethod: 'SWIFT Wire' },
+  'ESP': { lang: 'es', currency: 'EUR', currencySymbol: '€', country: 'Spain', paymentMethod: 'SWIFT Wire' },
+  'PHP': { lang: 'en', currency: 'PHP', currencySymbol: '₱', country: 'Philippines', paymentMethod: 'SWIFT Wire' },
+  'ARG': { lang: 'es', currency: 'ARS', currencySymbol: '$', country: 'Argentina', paymentMethod: 'SWIFT Wire' },
+  'MEX': { lang: 'es', currency: 'MXN', currencySymbol: '$', country: 'Mexico', paymentMethod: 'SWIFT Wire' },
+  'CAN': { lang: 'en', currency: 'CAD', currencySymbol: 'C$', country: 'Canada', paymentMethod: 'SWIFT Wire' },
+  'DEU': { lang: 'de', currency: 'EUR', currencySymbol: '€', country: 'Germany', paymentMethod: 'SWIFT Wire' },
+  'FRA': { lang: 'fr', currency: 'EUR', currencySymbol: '€', country: 'France', paymentMethod: 'SWIFT Wire' },
+  'ITA': { lang: 'it', currency: 'EUR', currencySymbol: '€', country: 'Italy', paymentMethod: 'SWIFT Wire' }
+};
+
 // Translation strings
 const translations = {
   pt: {
@@ -41,7 +55,7 @@ const translations = {
     password: "Senha",
     login: "Entrar",
     register: "Cadastrar",
-    price: "Somente R$ 30/mês",
+    price: "Somente {price}/mês",
     priceDesc: "Proteja sua casa e toda a vizinhança com tecnologia de ponta",
     invasion: "INVASÃO",
     robbery: "ROUBO", 
@@ -50,11 +64,14 @@ const translations = {
     stopAlerts: "PARAR ALERTAS",
     sendingAlerts: "Enviando alertas contínuos...",
     paymentTitle: "Seu primeiro mês é grátis!",
-    paymentDesc: "Após 30 dias, será cobrado R$30/mês automaticamente",
+    paymentDesc: "Após 30 dias, será cobrado {price}/mês automaticamente",
     confirmSubscription: "Confirmar Assinatura",
     creditCard: "Cartão de Crédito/Débito",
     pix: "PIX",
-    boleto: "Boleto Bancário"
+    boleto: "Boleto Bancário",
+    swiftWire: "Transferência SWIFT",
+    countryCode: "Código do País",
+    neighborhood: "Bairro"
   },
   en: {
     appName: "SafeZone", 
@@ -63,7 +80,7 @@ const translations = {
     password: "Password",
     login: "Login",
     register: "Register",
-    price: "Only $5.50/month",
+    price: "Only {price}/month",
     priceDesc: "Protect your home and neighborhood with cutting-edge technology",
     invasion: "BREAK-IN",
     robbery: "ROBBERY",
@@ -72,11 +89,14 @@ const translations = {
     stopAlerts: "STOP ALERTS",
     sendingAlerts: "Sending continuous alerts...",
     paymentTitle: "Your first month is free!",
-    paymentDesc: "After 30 days, $5.50/month will be charged automatically",
+    paymentDesc: "After 30 days, {price}/month will be charged automatically",
     confirmSubscription: "Confirm Subscription",
     creditCard: "Credit/Debit Card",
     pix: "PIX",
-    boleto: "Bank Slip"
+    boleto: "Bank Slip",
+    swiftWire: "SWIFT Wire Transfer",
+    countryCode: "Country Code",
+    neighborhood: "Neighborhood"
   },
   es: {
     appName: "SafeZone",
@@ -85,7 +105,7 @@ const translations = {
     password: "Contraseña",
     login: "Iniciar sesión",
     register: "Registrarse",
-    price: "Solo $30/mes",
+    price: "Solo {price}/mes",
     priceDesc: "Protege tu hogar y todo el vecindario con tecnología de punta",
     invasion: "INVASIÓN",
     robbery: "ROBO",
@@ -94,11 +114,89 @@ const translations = {
     stopAlerts: "DETENER ALERTAS",
     sendingAlerts: "Enviando alertas continuas...",
     paymentTitle: "¡Tu primer mes es gratis!",
-    paymentDesc: "Después de 30 días, se cobrará $30/mes automáticamente",
+    paymentDesc: "Después de 30 días, se cobrará {price}/mes automáticamente",
     confirmSubscription: "Confirmar Suscripción",
     creditCard: "Tarjeta de Crédito/Débito",
     pix: "PIX",
-    boleto: "Boleto Bancario"
+    boleto: "Boleto Bancario",
+    swiftWire: "Transferencia SWIFT",
+    countryCode: "Código de País",
+    neighborhood: "Barrio"
+  },
+  de: {
+    appName: "SafeZone",
+    appTagline: "Gemeinschaftssicherheit in Ihren Händen",
+    email: "E-Mail",
+    password: "Passwort",
+    login: "Anmelden",
+    register: "Registrieren",
+    price: "Nur {price}/Monat",
+    priceDesc: "Schützen Sie Ihr Zuhause und Ihre Nachbarschaft mit modernster Technologie",
+    invasion: "EINBRUCH",
+    robbery: "RAUB",
+    emergency: "NOTFALL",
+    recentAlerts: "Aktuelle Warnungen",
+    stopAlerts: "WARNUNGEN STOPPEN",
+    sendingAlerts: "Kontinuierliche Warnungen werden gesendet...",
+    paymentTitle: "Ihr erster Monat ist kostenlos!",
+    paymentDesc: "Nach 30 Tagen werden automatisch {price}/Monat berechnet",
+    confirmSubscription: "Abonnement bestätigen",
+    creditCard: "Kredit-/Debitkarte",
+    pix: "PIX",
+    boleto: "Bankbeleg",
+    swiftWire: "SWIFT-Überweisung",
+    countryCode: "Ländercode",
+    neighborhood: "Nachbarschaft"
+  },
+  fr: {
+    appName: "SafeZone",
+    appTagline: "Sécurité communautaire entre vos mains",
+    email: "E-mail",
+    password: "Mot de passe",
+    login: "Se connecter",
+    register: "S'inscrire",
+    price: "Seulement {price}/mois",
+    priceDesc: "Protégez votre maison et tout le quartier avec une technologie de pointe",
+    invasion: "INTRUSION",
+    robbery: "VOL",
+    emergency: "URGENCE",
+    recentAlerts: "Alertes récentes",
+    stopAlerts: "ARRÊTER LES ALERTES",
+    sendingAlerts: "Envoi d'alertes continues...",
+    paymentTitle: "Votre premier mois est gratuit!",
+    paymentDesc: "Après 30 jours, {price}/mois sera facturé automatiquement",
+    confirmSubscription: "Confirmer l'abonnement",
+    creditCard: "Carte de crédit/débit",
+    pix: "PIX",
+    boleto: "Bordereau bancaire",
+    swiftWire: "Virement SWIFT",
+    countryCode: "Code pays",
+    neighborhood: "Quartier"
+  },
+  it: {
+    appName: "SafeZone",
+    appTagline: "Sicurezza della comunità nelle tue mani",
+    email: "Email",
+    password: "Password",
+    login: "Accedi",
+    register: "Registrati",
+    price: "Solo {price}/mese",
+    priceDesc: "Proteggi la tua casa e tutto il quartiere con tecnologia all'avanguardia",
+    invasion: "IRRUZIONE",
+    robbery: "RAPINA",
+    emergency: "EMERGENZA",
+    recentAlerts: "Avvisi recenti",
+    stopAlerts: "FERMA AVVISI",
+    sendingAlerts: "Invio avvisi continui...",
+    paymentTitle: "Il tuo primo mese è gratis!",
+    paymentDesc: "Dopo 30 giorni, {price}/mese sarà addebitato automaticamente",
+    confirmSubscription: "Conferma abbonamento",
+    creditCard: "Carta di credito/debito",
+    pix: "PIX",
+    boleto: "Ricevuta bancaria",
+    swiftWire: "Bonifico SWIFT",
+    countryCode: "Codice paese",
+    neighborhood: "Quartiere"
   }
 };
 
