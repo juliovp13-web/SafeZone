@@ -283,20 +283,53 @@
           agent: "testing"
           comment: "✅ TESTADO COM SUCESSO: Todas as abas admin funcionando: 1) Estatísticas: 4 cards (Total Usuários: 1, Assinaturas Ativas: 0, Total Alertas: 0, Mensagens Pendentes: 0) 2) Usuários: Tabela mostrando Julio com badges Admin e VIP 3) Suporte: Página carregada (sem mensagens) 4) Admins: Funcionalidade 'Adicionar Admin' disponível."
 
-  - task: "Status VIP Permanente Admin"
+  - task: "Campo Bairro Duplicado Corrigido"
     implemented: true
-    working: true
+    working: "NA"
     file: "/app/frontend/src/App.js"
     stuck_count: 0
     priority: "high"
-    needs_retesting: false
+    needs_retesting: true
     status_history:
         - working: "NA"
           agent: "main"
-          comment: "UI mostra código PIX e informações de boleto mock"
-        - working: true
-          agent: "testing"
-          comment: "✅ TESTADO COM SUCESSO: Status VIP permanente confirmado! Usuário julio.csds@hotmail.com tem badges Admin e VIP na tabela de usuários. Não precisa de pagamento, acesso liberado automaticamente. Sistema de VIP vitalício funcionando perfeitamente conforme solicitado."
+          comment: "Removido campo bairro duplicado no formulário de cadastro (linhas 942-949). Agora há apenas um campo bairro."
+
+  - task: "Sistema Seletor de País com Bandeiras"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Criado componente CountrySelector com bandeiras clicáveis. Expandido lista de países de 10 para 30 países. Inclui bandeiras, códigos e símbolos de moeda."
+
+  - task: "Sistema SWIFT Backend"
+    implemented: true
+    working: "NA"
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Adicionado suporte completo SWIFT no backend: swift_code, bank_name, account_number, beneficiary, reference. PaymentResponse expandido com campos SWIFT."
+
+  - task: "Sistema Câmbio Expandido"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/src/App.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "main"
+          comment: "Expandido fallback de taxas de câmbio para incluir todas as 23 moedas suportadas (BRL, USD, EUR, GBP, JPY, etc)."
 
 ## metadata:
   created_by: "main_agent"
