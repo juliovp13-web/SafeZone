@@ -148,6 +148,16 @@ function App() {
     }
   }, [token, user]);
 
+  // Check for emergency notifications periodically
+  useEffect(() => {
+    if (token && user && !user.is_admin) {
+      fetchEmergencyNotifications();
+      // Check every 10 seconds for emergency notifications
+      const interval = setInterval(fetchEmergencyNotifications, 10 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [token, user]);
+
   // Fetch user profile
   const fetchProfile = async () => {
     try {
