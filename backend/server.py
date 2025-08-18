@@ -707,9 +707,12 @@ async def create_alert(
 
 @api_router.get("/alerts", response_model=List[AlertResponse])
 async def get_alerts(current_user: User = Depends(get_current_user)):
-    # Get alerts from same neighborhood
+    # Get alerts from same street (more precise than neighborhood)
     alerts_cursor = db.alerts.find({
+        "state": current_user.state,
+        "city": current_user.city,
         "neighborhood": current_user.neighborhood,
+        "street": current_user.street,
         "is_active": True
     }).sort("timestamp", -1).limit(10)
     
@@ -722,9 +725,11 @@ async def get_alerts(current_user: User = Depends(get_current_user)):
             id=alert["id"],
             type=alert["type"],
             user_name=alert["user_name"],
+            state=alert.get("state", "SP"),
+            city=alert.get("city", "São Paulo"),
+            neighborhood=alert["neighborhood"],
             street=alert["street"],
             number=alert["number"],
-            neighborhood=alert["neighborhood"],
             timestamp=alert["timestamp"].strftime("%d/%m/%Y %H:%M"),
             is_active=alert["is_active"]
         ))
