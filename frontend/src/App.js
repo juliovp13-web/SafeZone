@@ -255,14 +255,23 @@ function App() {
       localStorage.setItem('token', access_token);
       setToken(access_token);
       setUser(userData);
-      setCurrentScreen('main');
       
-      toast({
-        title: "Login realizado com sucesso!",
-        description: `Bem-vindo, ${userData.name}!`
-      });
+      // Check if user is admin and redirect accordingly
+      if (userData.is_admin) {
+        setCurrentScreen('admin-dashboard');
+        toast({
+          title: "Login Admin realizado com sucesso!",
+          description: `Bem-vindo ao painel administrativo, ${userData.name}!`
+        });
+      } else {
+        setCurrentScreen('main');
+        toast({
+          title: "Login realizado com sucesso!",
+          description: `Bem-vindo, ${userData.name}!`
+        });
+        fetchAlerts();
+      }
       
-      fetchAlerts();
     } catch (error) {
       toast({
         title: "Erro no login",
