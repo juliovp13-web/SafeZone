@@ -123,6 +123,22 @@ class PaymentResponse(BaseModel):
     pix_code: Optional[str] = None
     boleto_url: Optional[str] = None
 
+class SubscriptionStatus(BaseModel):
+    has_subscription: bool
+    status: str  # trial, active, overdue, blocked, cancelled, expired
+    days_remaining: Optional[int] = None
+    is_blocked: bool = False
+    trial_end_date: Optional[str] = None
+    payment_due_date: Optional[str] = None
+    grace_period_end: Optional[str] = None
+    message: str
+    needs_payment: bool = False
+
+class PaymentConfirmation(BaseModel):
+    subscription_id: str
+    payment_method: str
+    transaction_id: Optional[str] = None
+
 # Helper functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
