@@ -1462,23 +1462,65 @@ class SafeZoneAPITester:
         print("Senha: Corinthians12@@@")
         print("=" * 70)
         
-        # Test 1: Login Admin Backend with specific credentials
+        # Step 1: First try to login - if fails, create user
         login_data = {
             "email": "julio.csds@hotmail.com",
             "password": "Corinthians12@@@"
         }
         
+        print("🔍 Tentando login direto primeiro...")
         success, login_response = self.run_test(
-            "POST /api/login com credenciais específicas",
+            "POST /api/login com credenciais específicas (tentativa 1)",
             "POST",
             "login",
             200,
             data=login_data
         )
         
+        # If login failed, user might not exist - create it
         if not success:
-            print("❌ FALHA: Login com credenciais específicas falhou")
-            return False
+            print("\n📝 Login falhou - criando usuário admin primeiro...")
+            
+            # Create admin user with specific credentials
+            admin_user_data = {
+                "name": "Julio",
+                "email": "julio.csds@hotmail.com",
+                "password": "Corinthians12@@@",
+                "state": "SP",
+                "city": "São Paulo",
+                "street": "Rua Principal",
+                "number": "123",
+                "neighborhood": "Centro",
+                "resident_names": ["Julio"]
+            }
+            
+            success, register_response = self.run_test(
+                "Registrar usuário admin julio.csds@hotmail.com",
+                "POST",
+                "register",
+                200,
+                data=admin_user_data
+            )
+            
+            if not success:
+                print("❌ FALHA: Não conseguiu criar usuário admin")
+                return False
+            
+            print("✅ Usuário admin criado com sucesso!")
+            
+            # Now try login again
+            print("\n🔍 Tentando login novamente após criação...")
+            success, login_response = self.run_test(
+                "POST /api/login com credenciais específicas (tentativa 2)",
+                "POST",
+                "login",
+                200,
+                data=login_data
+            )
+            
+            if not success:
+                print("❌ FALHA: Login ainda falhou após criação do usuário")
+                return False
         
         print("\n🔍 VERIFICANDO RESPONSE DO LOGIN:")
         print("=" * 40)
