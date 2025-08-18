@@ -1582,7 +1582,7 @@ function AdminDashboard({ user, token, handleLogout, API }) {
                     <div className="flex items-center">
                       <Users className="w-8 h-8 text-blue-600" />
                       <div className="ml-4">
-                        <p className="text-sm font-medium text-gray-600">Total Usuários</p>
+                        <p className="text-sm font-medium text-gray-600">{t.totalUsers}</p>
                         <p className="text-2xl font-bold text-gray-900">{stats.total_users}</p>
                       </div>
                     </div>
