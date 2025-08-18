@@ -860,6 +860,7 @@ function App() {
               </div>
               <p className="text-sm text-gray-600">{user?.street}, {user?.number}</p>
               <p className="text-sm text-gray-600">{user?.neighborhood}</p>
+              <p className="text-sm text-gray-500">{user?.city} - {user?.state}</p>
             </CardContent>
           </Card>
 
