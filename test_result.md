@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-## user_problem_statement: "deixe o meu login de admin julio.csds@hotmail.com vitalicio, um email que não precisa de pagamento e é vip para sempre"
+## user_problem_statement: "na opção de cadastro tem duas opções chamada bairro, não quero 2, quero 1. na parte de mudar o páis do país, se eu colocar, BRA, EUA ou ESP, PHP, ARG, MEX, CAN, DEU, FRA, ITA... então o aplicativo todo vai mudar a linguagem! e o sistema de pagamento de acordo com o país, quero que seja um pagamento de acordo com swift. e as informações abaixo do botão de login da pagina incial deve se adaptar com a linguagem e o preço de acordo com o cambio atual em tempo real."
 
 ## backend:
   - task: "Sistema de Autenticação (login/registro)"
