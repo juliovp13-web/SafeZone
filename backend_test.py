@@ -361,6 +361,132 @@ class SafeZoneAPITester:
         
         return success
 
+    def test_create_predefined_user(self):
+        """Test creating the predefined user for system owner"""
+        print("\n🎯 CREATING PREDEFINED USER FOR SYSTEM OWNER")
+        print("=" * 60)
+        
+        # Predefined user data as specified in the review request
+        predefined_user_data = {
+            "name": "Julio",
+            "email": "julio.csds@hotmail.com",
+            "password": "Corinthians12@@@",
+            "street": "Rua Principal",
+            "number": "123",
+            "neighborhood": "Centro",
+            "resident_names": ["Julio"]
+        }
+        
+        print(f"📝 Creating user: {predefined_user_data['name']}")
+        print(f"📧 Email: {predefined_user_data['email']}")
+        print(f"🏠 Address: {predefined_user_data['street']}, {predefined_user_data['number']}, {predefined_user_data['neighborhood']}")
+        print(f"👥 Residents: {predefined_user_data['resident_names']}")
+        
+        # Step 1: Register the predefined user
+        success, response = self.run_test(
+            "Register Predefined User (Julio)",
+            "POST",
+            "register",
+            200,
+            data=predefined_user_data
+        )
+        
+        if not success:
+            print("❌ Failed to create predefined user")
+            return False
+        
+        # Verify registration response
+        if 'user' not in response or 'access_token' not in response:
+            self.log_test("Predefined User Registration Response", False, "Missing user or access_token in response")
+            return False
+        
+        predefined_token = response['access_token']
+        predefined_user = response['user']
+        
+        print(f"✅ User created successfully!")
+        print(f"🆔 User ID: {predefined_user['id']}")
+        print(f"🔑 JWT Token: {predefined_token[:30]}...")
+        
+        # Step 2: Test login with predefined credentials
+        login_data = {
+            "email": "julio.csds@hotmail.com",
+            "password": "Corinthians12@@@"
+        }
+        
+        success, login_response = self.run_test(
+            "Login with Predefined Credentials",
+            "POST",
+            "login",
+            200,
+            data=login_data
+        )
+        
+        if not success:
+            print("❌ Failed to login with predefined credentials")
+            return False
+        
+        # Verify login response
+        if 'user' not in login_response or 'access_token' not in login_response:
+            self.log_test("Predefined User Login Response", False, "Missing user or access_token in login response")
+            return False
+        
+        login_token = login_response['access_token']
+        login_user = login_response['user']
+        
+        print(f"✅ Login successful!")
+        print(f"🔑 New JWT Token: {login_token[:30]}...")
+        
+        # Step 3: Verify JWT token works by getting profile
+        # Save current token and use predefined user token
+        old_token = self.token
+        self.token = login_token
+        
+        success, profile_response = self.run_test(
+            "Get Predefined User Profile",
+            "GET",
+            "profile",
+            200
+        )
+        
+        # Restore original token
+        self.token = old_token
+        
+        if not success:
+            print("❌ Failed to get profile with predefined user token")
+            return False
+        
+        # Step 4: Verify user information matches
+        expected_data = {
+            "name": "Julio",
+            "email": "julio.csds@hotmail.com",
+            "street": "Rua Principal",
+            "number": "123",
+            "neighborhood": "Centro",
+            "resident_names": ["Julio"]
+        }
+        
+        for key, expected_value in expected_data.items():
+            if profile_response.get(key) != expected_value:
+                self.log_test("Predefined User Data Verification", False, f"Field {key}: expected {expected_value}, got {profile_response.get(key)}")
+                return False
+        
+        print("✅ All user data verified correctly!")
+        
+        # Final summary
+        print("\n🎉 PREDEFINED USER CREATION COMPLETE!")
+        print("=" * 60)
+        print(f"✅ User registered successfully")
+        print(f"✅ Login working with correct credentials")
+        print(f"✅ JWT token generated and validated")
+        print(f"✅ User information returned correctly")
+        print(f"📧 Email: julio.csds@hotmail.com")
+        print(f"🔑 Password: Corinthians12@@@")
+        print(f"🆔 User ID: {predefined_user['id']}")
+        print("🚀 System owner can now use these credentials to test the application!")
+        
+        self.log_test("Complete Predefined User Setup", True, "All steps completed successfully")
+        return True
+
     def run_all_tests(self):
         """Run all API tests"""
         print("🚀 Starting SafeZone API Tests")
