@@ -953,6 +953,68 @@ function App() {
     );
   }
 
+  // Admin Login Screen  
+  if (currentScreen === 'admin-login') {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-100">
+        <div className="max-w-md mx-auto pt-8 px-6">
+          <div className="flex items-center mb-6">
+            <Button variant="ghost" onClick={() => setCurrentScreen('login')} className="mr-4">
+              <ArrowLeft className="w-4 h-4" />
+            </Button>
+            <h2 className="text-2xl font-bold text-orange-800">🔐 Login Admin</h2>
+          </div>
+
+          <Card className="mb-6 border-orange-200">
+            <CardContent className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Shield className="w-8 h-8 text-orange-600" />
+                </div>
+                <h3 className="text-lg font-semibold text-orange-800">Painel Administrativo</h3>
+                <p className="text-sm text-gray-600">Acesso restrito à equipe de suporte</p>
+              </div>
+
+              <form onSubmit={handleLogin} className="space-y-4">
+                <div>
+                  <Label htmlFor="admin-email">Email Administrativo</Label>
+                  <Input
+                    id="admin-email"
+                    type="email"
+                    value={loginForm.email}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, email: e.target.value }))}
+                    placeholder="admin@safezone.com"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="admin-password">Senha</Label>
+                  <Input
+                    id="admin-password"
+                    type="password"
+                    value={loginForm.password}
+                    onChange={(e) => setLoginForm(prev => ({ ...prev, password: e.target.value }))}
+                    required
+                  />
+                </div>
+                <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
+                  🔐 Entrar como Admin
+                </Button>
+              </form>
+              
+              <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                <p className="text-xs text-orange-700 text-center">
+                  ⚡ Acesso ao painel de controle, mensagens de suporte e gerenciamento de usuários
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <Toaster />
+      </div>
+    );
+  }
+
   return null;
 }
 
