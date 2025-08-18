@@ -1030,7 +1030,411 @@ function App() {
     );
   }
 
+  // Admin Dashboard Screen
+  if (currentScreen === 'admin-dashboard') {
+    return <AdminDashboard 
+      user={user} 
+      token={token} 
+      handleLogout={handleLogout}
+      API={API}
+    />;
+  }
+
   return null;
+}
+
+// Admin Dashboard Component
+function AdminDashboard({ user, token, handleLogout, API }) {
+  const [activeTab, setActiveTab] = useState('stats');
+  const [stats, setStats] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [helpMessages, setHelpMessages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+
+  // Fetch admin stats
+  const fetchStats = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API}/admin/stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setStats(response.data);
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+      toast({
+        title: "Erro ao carregar estatísticas",
+        description: "Não foi possível carregar os dados",
+        variant: "destructive"
+      });
+    }
+    setLoading(false);
+  };
+
+  // Fetch all users
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API}/admin/users`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setUsers(response.data);
+    } catch (error) {
+      console.error('Failed to fetch users:', error);
+      toast({
+        title: "Erro ao carregar usuários",
+        description: "Não foi possível carregar os usuários",
+        variant: "destructive"
+      });
+    }
+    setLoading(false);
+  };
+
+  // Fetch help messages
+  const fetchHelpMessages = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API}/admin/help-messages`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setHelpMessages(response.data);
+    } catch (error) {
+      console.error('Failed to fetch help messages:', error);
+      toast({
+        title: "Erro ao carregar mensagens",
+        description: "Não foi possível carregar as mensagens de suporte",
+        variant: "destructive"
+      });
+    }
+    setLoading(false);
+  };
+
+  // Add new admin
+  const addAdmin = async () => {
+    if (!newAdminEmail) {
+      toast({
+        title: "Email obrigatório",
+        description: "Digite um email para adicionar como admin",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      await axios.post(`${API}/admin/set-admin`, {
+        email: newAdminEmail,
+        is_admin: true,
+        is_vip: true,
+        vip_permanent: true
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      toast({
+        title: "Admin adicionado com sucesso!",
+        description: `${newAdminEmail} agora é admin/VIP permanente`
+      });
+      
+      setNewAdminEmail('');
+      if (activeTab === 'users') {
+        fetchUsers();
+      }
+    } catch (error) {
+      toast({
+        title: "Erro ao adicionar admin",
+        description: error.response?.data?.detail || "Erro interno do servidor",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Load data when tab changes
+  React.useEffect(() => {
+    if (activeTab === 'stats') {
+      fetchStats();
+    } else if (activeTab === 'users') {
+      fetchUsers();
+    } else if (activeTab === 'support') {
+      fetchHelpMessages();
+    }
+  }, [activeTab]);
+
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {/* Header */}
+      <div className="bg-orange-600 text-white p-4 flex justify-between items-center">
+        <div className="flex items-center">
+          <Shield className="w-6 h-6 mr-2" />
+          <h2 className="font-bold text-xl">SafeZone Admin</h2>
+        </div>
+        <div className="flex items-center space-x-4">
+          <span className="text-sm">👋 Olá, {user?.name}</span>
+          <Button variant="ghost" onClick={handleLogout} className="text-white hover:bg-orange-700">
+            <LogOut className="w-5 h-5" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Navigation Tabs */}
+      <div className="bg-white border-b">
+        <div className="flex space-x-8 px-6">
+          {[
+            { key: 'stats', label: '📊 Estatísticas', icon: BarChart3 },
+            { key: 'users', label: '👥 Usuários', icon: Users },
+            { key: 'support', label: '💬 Suporte', icon: Phone },
+            { key: 'admins', label: '🔐 Admins', icon: Shield }
+          ].map((tab) => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`py-4 px-2 border-b-2 font-medium text-sm ${
+                activeTab === tab.key
+                  ? 'border-orange-500 text-orange-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <div className="flex items-center space-x-2">
+                <tab.icon className="w-4 h-4" />
+                <span>{tab.label}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="p-6">
+        {/* Statistics Tab */}
+        {activeTab === 'stats' && (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900">Estatísticas do Sistema</h3>
+            
+            {loading ? (
+              <div className="text-center">Carregando...</div>
+            ) : stats ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center">
+                      <Users className="w-8 h-8 text-blue-600" />
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Usuários</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.total_users}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center">
+                      <CreditCard className="w-8 h-8 text-green-600" />
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Assinaturas Ativas</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.active_subscriptions}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center">
+                      <AlertTriangle className="w-8 h-8 text-red-600" />
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Total Alertas</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.total_alerts}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex items-center">
+                      <Phone className="w-8 h-8 text-orange-600" />
+                      <div className="ml-4">
+                        <p className="text-sm font-medium text-gray-600">Mensagens Pendentes</p>
+                        <p className="text-2xl font-bold text-gray-900">{stats.pending_help_messages}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            ) : null}
+          </div>
+        )}
+
+        {/* Users Tab */}
+        {activeTab === 'users' && (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900">Gerenciamento de Usuários</h3>
+            
+            {loading ? (
+              <div className="text-center">Carregando usuários...</div>
+            ) : (
+              <Card>
+                <CardContent className="p-6">
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200">
+                      <thead className="bg-gray-50">
+                        <tr>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Usuário
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Endereço Completo
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Status
+                          </th>
+                          <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Cadastro
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="bg-white divide-y divide-gray-200">
+                        {users.map((user) => (
+                          <tr key={user.id}>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                              <div className="text-sm text-gray-500">{user.email}</div>
+                            </td>
+                            <td className="px-6 py-4">
+                              <div className="text-sm text-gray-900">{user.address}</div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap">
+                              <div className="flex space-x-2">
+                                {user.is_admin && (
+                                  <Badge className="bg-orange-100 text-orange-800">Admin</Badge>
+                                )}
+                                {user.is_vip && (
+                                  <Badge className="bg-purple-100 text-purple-800">VIP</Badge>
+                                )}
+                                {!user.is_admin && !user.is_vip && (
+                                  <Badge variant="secondary">Regular</Badge>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                              {user.created_at}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        )}
+
+        {/* Support Messages Tab */}
+        {activeTab === 'support' && (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900">Mensagens de Suporte</h3>
+            
+            {loading ? (
+              <div className="text-center">Carregando mensagens...</div>
+            ) : (
+              <div className="space-y-4">
+                {helpMessages.length === 0 ? (
+                  <Card>
+                    <CardContent className="p-6 text-center">
+                      <p className="text-gray-500">Nenhuma mensagem de suporte encontrada</p>
+                    </CardContent>
+                  </Card>
+                ) : (
+                  helpMessages.map((message) => (
+                    <Card key={message.id}>
+                      <CardContent className="p-6">
+                        <div className="flex justify-between items-start mb-4">
+                          <div>
+                            <h4 className="font-semibold text-lg">{message.user_name}</h4>
+                            <p className="text-sm text-gray-600">{message.user_email}</p>
+                            <p className="text-sm text-blue-600">📍 {message.user_address}</p>
+                          </div>
+                          <div className="text-right">
+                            <Badge 
+                              variant={message.status === 'pending' ? 'destructive' : 'default'}
+                            >
+                              {message.status === 'pending' ? 'Pendente' : 'Resolvido'}
+                            </Badge>
+                            <p className="text-xs text-gray-500 mt-1">{message.created_at}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <p className="text-gray-800">{message.message}</p>
+                        </div>
+                        
+                        {message.admin_response && (
+                          <div className="mt-4 bg-blue-50 p-4 rounded-lg">
+                            <p className="text-sm font-semibold text-blue-800">Resposta do Admin:</p>
+                            <p className="text-blue-700">{message.admin_response}</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Add Admins Tab */}
+        {activeTab === 'admins' && (
+          <div className="space-y-6">
+            <h3 className="text-2xl font-bold text-gray-900">Adicionar Administradores</h3>
+            
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="admin-email">Email do Novo Admin</Label>
+                    <div className="flex space-x-2 mt-2">
+                      <Input
+                        id="admin-email"
+                        type="email"
+                        value={newAdminEmail}
+                        onChange={(e) => setNewAdminEmail(e.target.value)}
+                        placeholder="email@exemplo.com"
+                        className="flex-1"
+                      />
+                      <Button onClick={addAdmin} className="bg-orange-600 hover:bg-orange-700">
+                        Adicionar Admin
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  <Alert>
+                    <Shield className="w-4 h-4" />
+                    <AlertDescription>
+                      🎯 <strong>Admins têm acesso total:</strong> Painel de controle, gerenciamento de usuários, 
+                      mensagens de suporte e status VIP permanente (não precisam pagar assinatura).
+                    </AlertDescription>
+                  </Alert>
+
+                  <div className="bg-green-50 p-4 rounded-lg">
+                    <h4 className="font-semibold text-green-800 mb-2">✅ Benefícios do Admin/VIP:</h4>
+                    <ul className="text-sm text-green-700 space-y-1">
+                      <li>• Acesso permanente sem pagamento</li>
+                      <li>• Painel administrativo completo</li>
+                      <li>• Visualização de todas as mensagens de suporte</li>
+                      <li>• Gerenciamento de outros usuários</li>
+                      <li>• Estatísticas do sistema em tempo real</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+      </div>
+      <Toaster />
+    </div>
+  );
 }
 
 export default App;
