@@ -492,6 +492,9 @@ class SafeZoneAPITester:
         print("🚀 Starting SafeZone API Tests")
         print("=" * 50)
         
+        # PRIORITY: Create predefined user for system owner
+        self.test_create_predefined_user()
+        
         # Basic API tests
         self.test_root_endpoint()
         
