@@ -79,7 +79,7 @@ def test_data_persistence_flow():
     """Test complete data persistence flow"""
     print("\n🔍 Testing Complete Data Persistence Flow...")
     
-    base_url = "https://payment-flow-test.preview.emergentagent.com"
+    base_url = "https://admin-vip.preview.emergentagent.com"
     api_url = f"{base_url}/api"
     
     # Create unique email for this test
