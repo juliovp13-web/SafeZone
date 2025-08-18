@@ -442,6 +442,16 @@ async def create_subscription(
 async def get_subscription_status(current_user: User = Depends(get_current_user)):
     """Check user's subscription status and determine if app should be blocked"""
     
+    # VIP users bypass all subscription checks
+    if is_vip_active(current_user):
+        return SubscriptionStatus(
+            has_subscription=True,
+            status="vip",
+            is_blocked=False,
+            message="Status VIP - Acesso liberado permanentemente!" if current_user.is_admin else "Status VIP ativo",
+            needs_payment=False
+        )
+    
     # Find user's subscription
     subscription_doc = await db.subscriptions.find_one({
         "user_id": current_user.id,
