@@ -338,7 +338,11 @@
   run_ui: false
 
 ## test_plan:
-  current_focus: []
+  current_focus:
+    - "Campo Bairro Duplicado Corrigido"
+    - "Sistema Seletor de País com Bandeiras"
+    - "Sistema SWIFT Backend"
+    - "Sistema Câmbio Expandido"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
