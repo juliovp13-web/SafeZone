@@ -654,9 +654,11 @@ async def create_alert(
         type=alert_data.type,
         user_id=current_user.id,
         user_name=current_user.resident_names[0] if current_user.resident_names else current_user.name,
+        state=current_user.state,
+        city=current_user.city,
+        neighborhood=current_user.neighborhood,
         street=current_user.street,
         number=current_user.number,
-        neighborhood=current_user.neighborhood,
         location={
             "lat": -23.55 + (0.01 * hash(current_user.id) % 100 - 50) / 5000,
             "lng": -46.63 + (0.01 * hash(current_user.id) % 100 - 50) / 5000
@@ -668,7 +670,40 @@ async def create_alert(
     
     await db.alerts.insert_one(alert_dict)
     
-    return {"message": f"Alerta de {alert_data.type} enviado com sucesso!", "alert_id": alert.id}
+    # Find all users on the same street for emergency notifications
+    same_street_users = []
+    users_cursor = db.users.find({
+        "state": current_user.state,
+        "city": current_user.city,
+        "neighborhood": current_user.neighborhood,
+        "street": current_user.street,
+        "id": {"$ne": current_user.id}  # Exclude the requester
+    })
+    
+    async for user in users_cursor:
+        same_street_users.append(user["id"])
+    
+    # Create emergency notification record
+    notification = EmergencyNotification(
+        alert_id=alert.id,
+        alert_type=alert_data.type,
+        requester_name=current_user.name,
+        requester_address=f"{current_user.street}, {current_user.number}, {current_user.neighborhood}, {current_user.city} - {current_user.state}",
+        target_users=same_street_users,
+        is_silent_for_requester=True
+    )
+    
+    notification_dict = notification.dict()
+    notification_dict = prepare_for_mongo(notification_dict)
+    await db.emergency_notifications.insert_one(notification_dict)
+    
+    return {
+        "message": f"Alerta de {alert_data.type} enviado com sucesso!",
+        "alert_id": alert.id,
+        "notification_sent_to": len(same_street_users),
+        "silent_for_requester": True,
+        "target_address": f"Rua {current_user.street}, {current_user.neighborhood}"
+    }
 
 @api_router.get("/alerts", response_model=List[AlertResponse])
 async def get_alerts(current_user: User = Depends(get_current_user)):
