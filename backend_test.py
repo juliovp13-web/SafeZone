@@ -993,6 +993,353 @@ class SafeZoneAPITester:
         self.log_test("Cancellation System Test Complete", all_success)
         return all_success
 
+    def test_swift_payment_system(self):
+        """Test SWIFT Wire Transfer Payment System - PRIORITY TEST"""
+        print("\n🎯 TESTE PRIORITÁRIO: SISTEMA SWIFT")
+        print("=" * 60)
+        print("Testing SWIFT wire transfer implementation as requested in review:")
+        print("- POST /api/create-subscription with payment_method='swift-wire'")
+        print("- Verify SWIFT fields: swift_code, bank_name, account_number, beneficiary, reference")
+        print("=" * 60)
+        
+        # Step 1: Login with admin user (julio.csds@hotmail.com)
+        login_data = {
+            "email": "julio.csds@hotmail.com",
+            "password": "Corinthians12@@@"
+        }
+        
+        success, login_response = self.run_test(
+            "Login Admin User for SWIFT Test",
+            "POST",
+            "login",
+            200,
+            data=login_data
+        )
+        
+        if not success:
+            print("❌ Failed to login with admin credentials")
+            return False
+        
+        admin_token = login_response['access_token']
+        old_token = self.token
+        self.token = admin_token
+        
+        print(f"✅ Admin login successful")
+        
+        # Step 2: Create subscription with SWIFT wire transfer
+        swift_subscription_data = {
+            "payment_method": "swift-wire"
+        }
+        
+        success, swift_response = self.run_test(
+            "Create SWIFT Wire Transfer Subscription",
+            "POST",
+            "create-subscription",
+            200,
+            data=swift_subscription_data
+        )
+        
+        if not success:
+            self.token = old_token
+            print("❌ Failed to create SWIFT subscription")
+            return False
+        
+        # Step 3: Verify SWIFT response fields
+        print("\n🔍 VERIFYING SWIFT RESPONSE FIELDS:")
+        print("=" * 40)
+        
+        required_swift_fields = {
+            'swift_code': 'SAFEBR2SXXX',
+            'bank_name': 'SafeZone International Bank',
+            'beneficiary': 'SafeZone Security Services'
+        }
+        
+        optional_swift_fields = ['account_number', 'reference']
+        
+        all_fields_valid = True
+        
+        # Check required fields with expected values
+        for field, expected_value in required_swift_fields.items():
+            if field not in swift_response:
+                print(f"❌ Missing required SWIFT field: {field}")
+                all_fields_valid = False
+            elif swift_response[field] != expected_value:
+                print(f"❌ SWIFT field {field}: expected '{expected_value}', got '{swift_response[field]}'")
+                all_fields_valid = False
+            else:
+                print(f"✅ {field}: {swift_response[field]}")
+        
+        # Check optional fields exist and have values
+        for field in optional_swift_fields:
+            if field not in swift_response:
+                print(f"❌ Missing SWIFT field: {field}")
+                all_fields_valid = False
+            elif not swift_response[field]:
+                print(f"❌ SWIFT field {field} is empty")
+                all_fields_valid = False
+            else:
+                print(f"✅ {field}: {swift_response[field]}")
+        
+        # Check basic response fields
+        if not swift_response.get('success'):
+            print(f"❌ Success field is not True: {swift_response.get('success')}")
+            all_fields_valid = False
+        else:
+            print(f"✅ success: {swift_response.get('success')}")
+        
+        if not swift_response.get('message'):
+            print(f"❌ Message field is empty")
+            all_fields_valid = False
+        else:
+            print(f"✅ message: {swift_response.get('message')}")
+        
+        self.token = old_token
+        
+        if all_fields_valid:
+            print("\n🎉 SWIFT SYSTEM TEST PASSED!")
+            print("=" * 40)
+            print("✅ All required SWIFT fields present and correct")
+            print("✅ Account number and reference generated")
+            print("✅ SWIFT wire transfer ready for international payments")
+            self.log_test("SWIFT Payment System Test", True)
+            return True
+        else:
+            print("\n❌ SWIFT SYSTEM TEST FAILED!")
+            print("=" * 40)
+            print("❌ Some SWIFT fields are missing or incorrect")
+            self.log_test("SWIFT Payment System Test", False, "Missing or incorrect SWIFT fields")
+            return False
+
+    def test_existing_payment_methods(self):
+        """Test existing payment methods still work after SWIFT implementation"""
+        print("\n🎯 TESTE: MÉTODOS DE PAGAMENTO EXISTENTES")
+        print("=" * 60)
+        print("Verifying PIX, boleto, and credit card still work normally")
+        print("=" * 60)
+        
+        all_methods_working = True
+        
+        # Test 1: PIX Payment Method
+        print("\n📱 Testing PIX Payment Method")
+        print("-" * 30)
+        
+        # Create new user for PIX test
+        pix_user_data = {
+            "name": "Usuario PIX",
+            "email": f"pix_{datetime.now().strftime('%H%M%S')}@exemplo.com",
+            "password": "senha123",
+            "state": "SP",
+            "city": "São Paulo",
+            "street": "Rua PIX",
+            "number": "100",
+            "neighborhood": "Centro PIX",
+            "resident_names": ["Usuario PIX"]
+        }
+        
+        success, response = self.run_test(
+            "Register User for PIX Test",
+            "POST",
+            "register",
+            200,
+            data=pix_user_data
+        )
+        
+        if not success:
+            all_methods_working = False
+        else:
+            pix_token = response['access_token']
+            old_token = self.token
+            self.token = pix_token
+            
+            pix_subscription_data = {
+                "payment_method": "pix"
+            }
+            
+            success, pix_response = self.run_test(
+                "Create PIX Subscription",
+                "POST",
+                "create-subscription",
+                200,
+                data=pix_subscription_data
+            )
+            
+            if success and 'pix_code' in pix_response:
+                print(f"✅ PIX Code: {pix_response['pix_code']}")
+                print(f"✅ PIX Message: {pix_response.get('message', 'No message')}")
+            else:
+                print("❌ PIX payment method failed")
+                all_methods_working = False
+            
+            self.token = old_token
+        
+        # Test 2: Boleto Payment Method
+        print("\n🧾 Testing Boleto Payment Method")
+        print("-" * 30)
+        
+        # Create new user for Boleto test
+        boleto_user_data = {
+            "name": "Usuario Boleto",
+            "email": f"boleto_{datetime.now().strftime('%H%M%S')}@exemplo.com",
+            "password": "senha123",
+            "state": "RJ",
+            "city": "Rio de Janeiro",
+            "street": "Rua Boleto",
+            "number": "200",
+            "neighborhood": "Centro Boleto",
+            "resident_names": ["Usuario Boleto"]
+        }
+        
+        success, response = self.run_test(
+            "Register User for Boleto Test",
+            "POST",
+            "register",
+            200,
+            data=boleto_user_data
+        )
+        
+        if not success:
+            all_methods_working = False
+        else:
+            boleto_token = response['access_token']
+            old_token = self.token
+            self.token = boleto_token
+            
+            boleto_subscription_data = {
+                "payment_method": "boleto"
+            }
+            
+            success, boleto_response = self.run_test(
+                "Create Boleto Subscription",
+                "POST",
+                "create-subscription",
+                200,
+                data=boleto_subscription_data
+            )
+            
+            if success and 'boleto_url' in boleto_response:
+                print(f"✅ Boleto URL: {boleto_response['boleto_url']}")
+                print(f"✅ Boleto Message: {boleto_response.get('message', 'No message')}")
+            else:
+                print("❌ Boleto payment method failed")
+                all_methods_working = False
+            
+            self.token = old_token
+        
+        # Test 3: Credit Card Payment Method
+        print("\n💳 Testing Credit Card Payment Method")
+        print("-" * 30)
+        
+        # Create new user for Credit Card test
+        card_user_data = {
+            "name": "Usuario Cartao",
+            "email": f"card_{datetime.now().strftime('%H%M%S')}@exemplo.com",
+            "password": "senha123",
+            "state": "MG",
+            "city": "Belo Horizonte",
+            "street": "Rua Cartao",
+            "number": "300",
+            "neighborhood": "Centro Cartao",
+            "resident_names": ["Usuario Cartao"]
+        }
+        
+        success, response = self.run_test(
+            "Register User for Credit Card Test",
+            "POST",
+            "register",
+            200,
+            data=card_user_data
+        )
+        
+        if not success:
+            all_methods_working = False
+        else:
+            card_token = response['access_token']
+            old_token = self.token
+            self.token = card_token
+            
+            card_subscription_data = {
+                "payment_method": "credit-card",
+                "card_number": "1234567890123456",
+                "card_name": "Usuario Cartao",
+                "card_expiry": "12/25",
+                "card_cvv": "123"
+            }
+            
+            success, card_response = self.run_test(
+                "Create Credit Card Subscription",
+                "POST",
+                "create-subscription",
+                200,
+                data=card_subscription_data
+            )
+            
+            if success and 'payment_url' in card_response:
+                print(f"✅ Payment URL: {card_response['payment_url']}")
+                print(f"✅ Card Message: {card_response.get('message', 'No message')}")
+            else:
+                print("❌ Credit card payment method failed")
+                all_methods_working = False
+            
+            self.token = old_token
+        
+        # Final result
+        if all_methods_working:
+            print("\n🎉 ALL EXISTING PAYMENT METHODS WORKING!")
+            print("=" * 50)
+            print("✅ PIX payment method functional")
+            print("✅ Boleto payment method functional")
+            print("✅ Credit card payment method functional")
+            self.log_test("Existing Payment Methods Test", True)
+            return True
+        else:
+            print("\n❌ SOME PAYMENT METHODS FAILED!")
+            print("=" * 50)
+            self.log_test("Existing Payment Methods Test", False, "One or more payment methods failed")
+            return False
+
+    def test_admin_login_credentials(self):
+        """Test admin login with specific credentials from review request"""
+        print("\n🎯 TESTE: LOGIN ADMIN COM CREDENCIAIS ESPECÍFICAS")
+        print("=" * 60)
+        print("Testing login with julio.csds@hotmail.com / Corinthians12@@@")
+        print("=" * 60)
+        
+        # Test login with exact credentials from review request
+        login_data = {
+            "email": "julio.csds@hotmail.com",
+            "password": "Corinthians12@@@"
+        }
+        
+        success, login_response = self.run_test(
+            "Admin Login with Review Credentials",
+            "POST",
+            "login",
+            200,
+            data=login_data
+        )
+        
+        if not success:
+            print("❌ Failed to login with specified admin credentials")
+            return False
+        
+        # Verify admin privileges
+        user = login_response.get('user', {})
+        if not user.get('is_admin'):
+            print(f"❌ User is not admin: {user.get('is_admin')}")
+            return False
+        
+        if not user.get('is_vip'):
+            print(f"❌ User is not VIP: {user.get('is_vip')}")
+            return False
+        
+        print(f"✅ Admin login successful")
+        print(f"✅ User is admin: {user.get('is_admin')}")
+        print(f"✅ User is VIP: {user.get('is_vip')}")
+        print(f"✅ JWT token generated: {login_response['access_token'][:30]}...")
+        
+        self.log_test("Admin Login Credentials Test", True)
+        return login_response['access_token']
+
     def run_admin_tests(self):
         """Run all admin system tests as requested in review"""
         print("🚀 Starting SafeZone ADMIN SYSTEM Tests")
