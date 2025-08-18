@@ -27,6 +27,7 @@ import {
   Home,
   Phone
 } from 'lucide-react';
+import { countryMappings, languages } from './countries';
 import './App.css';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
