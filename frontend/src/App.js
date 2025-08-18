@@ -119,8 +119,8 @@ function App() {
   // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
-    name: '', email: '', password: '', street: '', number: '', 
-    neighborhood: '', residentsCount: 1, residentNames: ['']
+    name: '', email: '', password: '', state: '', city: '', neighborhood: '', 
+    street: '', number: '', residentsCount: 1, residentNames: ['']
   });
   const [paymentForm, setPaymentForm] = useState({
     paymentMethod: 'credit-card',
