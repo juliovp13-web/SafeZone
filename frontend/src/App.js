@@ -89,7 +89,13 @@ const translations = {
     boleto: "Bank Slip",
     swiftWire: "SWIFT Wire Transfer",
     countryCode: "Country Code",
-    neighborhood: "Neighborhood"
+    neighborhood: "Neighborhood",
+    // Admin translations
+    totalUsers: "Total Users",
+    activeSubscriptions: "Active Subscriptions",
+    totalAlerts: "Total Alerts",
+    pendingMessages: "Pending Messages",
+    adminFullAccess: "Admins have full access: Control panel, user management, support messages and permanent VIP status (no subscription payment required)."
   },
   es: {
     appName: "SafeZone",
