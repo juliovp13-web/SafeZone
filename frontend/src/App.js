@@ -624,6 +624,7 @@ function App() {
                     id="reg-number"
                     value={registerForm.number}
                     onChange={(e) => setRegisterForm(prev => ({ ...prev, number: e.target.value }))}
+                    placeholder="Ex: 123, 456-A"
                     required
                   />
                 </div>
