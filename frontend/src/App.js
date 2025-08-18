@@ -1501,7 +1501,7 @@ function App() {
 
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <Label htmlFor="admin-email">Email Administrativo</Label>
+                  <Label htmlFor="admin-email">{t.adminEmail}</Label>
                   <Input
                     id="admin-email"
                     type="email"
