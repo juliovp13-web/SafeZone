@@ -270,7 +270,8 @@ def parse_from_mongo(item):
         datetime_fields = [
             'created_at', 'timestamp', 'start_date', 'next_payment', 
             'trial_end_date', 'payment_due_date', 'grace_period_end', 
-            'last_payment_date', 'blocked_at'
+            'last_payment_date', 'blocked_at', 'vip_expires_at', 
+            'resolved_at', 'cancelled_at'
         ]
         for key, value in item.items():
             if key in datetime_fields and isinstance(value, str):
