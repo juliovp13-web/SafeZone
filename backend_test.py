@@ -1077,7 +1077,8 @@ class SafeZoneAPITester:
 
 def main():
     tester = SafeZoneAPITester()
-    return tester.run_all_tests()
+    # Run admin system tests as requested in review
+    return tester.run_admin_tests()
 
 if __name__ == "__main__":
     sys.exit(main())
