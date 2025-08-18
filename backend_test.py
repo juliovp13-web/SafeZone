@@ -1340,6 +1340,37 @@ class SafeZoneAPITester:
         self.log_test("Admin Login Credentials Test", True)
         return login_response['access_token']
 
+    def run_swift_tests(self):
+        """Run SWIFT system tests as requested in review"""
+        print("🚀 Starting SafeZone SWIFT SYSTEM Tests")
+        print("=" * 60)
+        print("Testing SWIFT implementation as requested in review:")
+        print("1. Admin Login with Specific Credentials")
+        print("2. SWIFT Wire Transfer Payment System")
+        print("3. Existing Payment Methods Compatibility")
+        print("=" * 60)
+        
+        # Run SWIFT-specific tests
+        test1 = self.test_admin_login_credentials()
+        test2 = self.test_swift_payment_system()
+        test3 = self.test_existing_payment_methods()
+        
+        # Print final results
+        print("\n" + "=" * 60)
+        print("📊 SWIFT SYSTEM TEST RESULTS")
+        print("=" * 60)
+        print(f"Tests Run: {self.tests_run}")
+        print(f"Tests Passed: {self.tests_passed}")
+        print(f"Tests Failed: {self.tests_run - self.tests_passed}")
+        print(f"Success Rate: {(self.tests_passed/self.tests_run)*100:.1f}%")
+        
+        if self.tests_passed == self.tests_run:
+            print("🎉 All SWIFT system tests passed!")
+            return 0
+        else:
+            print("⚠️  Some SWIFT system tests failed!")
+            return 1
+
     def run_admin_tests(self):
         """Run all admin system tests as requested in review"""
         print("🚀 Starting SafeZone ADMIN SYSTEM Tests")
