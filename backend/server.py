@@ -317,6 +317,174 @@ async def create_subscription(
     
     return payment_response
 
+@api_router.get("/subscription-status", response_model=SubscriptionStatus)
+async def get_subscription_status(current_user: User = Depends(get_current_user)):
+    """Check user's subscription status and determine if app should be blocked"""
+    
+    # Find user's subscription
+    subscription_doc = await db.subscriptions.find_one({
+        "user_id": current_user.id,
+        "status": {"$nin": ["cancelled", "expired"]}
+    })
+    
+    if not subscription_doc:
+        return SubscriptionStatus(
+            has_subscription=False,
+            status="none",
+            is_blocked=True,
+            message="Nenhuma assinatura encontrada. Faça sua assinatura para usar o aplicativo.",
+            needs_payment=True
+        )
+    
+    subscription_doc = parse_from_mongo(subscription_doc)
+    now = datetime.now(timezone.utc)
+    
+    # During trial period
+    if subscription_doc["status"] == "trial":
+        trial_end = subscription_doc["trial_end_date"]
+        if now < trial_end:
+            days_remaining = (trial_end - now).days
+            return SubscriptionStatus(
+                has_subscription=True,
+                status="trial",
+                days_remaining=days_remaining,
+                is_blocked=False,
+                trial_end_date=trial_end.strftime("%d/%m/%Y"),
+                message=f"Período gratuito! Restam {days_remaining} dias até vencimento.",
+                needs_payment=False
+            )
+        else:
+            # Trial expired, check grace period
+            grace_end = subscription_doc["grace_period_end"]
+            if now < grace_end:
+                days_remaining = (grace_end - now).days
+                # Update status to overdue
+                await db.subscriptions.update_one(
+                    {"id": subscription_doc["id"]},
+                    {"$set": {"status": "overdue"}}
+                )
+                return SubscriptionStatus(
+                    has_subscription=True,
+                    status="overdue",
+                    days_remaining=days_remaining,
+                    is_blocked=False,
+                    payment_due_date=subscription_doc["payment_due_date"].strftime("%d/%m/%Y"),
+                    grace_period_end=grace_end.strftime("%d/%m/%Y"),
+                    message=f"Período de pagamento! Restam {days_remaining} dias para pagar R$30,00.",
+                    needs_payment=True
+                )
+            else:
+                # Grace period expired, block user
+                if subscription_doc["status"] != "blocked":
+                    await db.subscriptions.update_one(
+                        {"id": subscription_doc["id"]},
+                        {"$set": {"status": "blocked", "blocked_at": now.isoformat()}}
+                    )
+                return SubscriptionStatus(
+                    has_subscription=True,
+                    status="blocked",
+                    is_blocked=True,
+                    message="Assinatura bloqueada! Pague R$30,00 para reativar o aplicativo.",
+                    needs_payment=True
+                )
+    
+    # Active subscription
+    elif subscription_doc["status"] == "active":
+        next_payment = subscription_doc["next_payment"]
+        if now < next_payment:
+            days_remaining = (next_payment - now).days
+            return SubscriptionStatus(
+                has_subscription=True,
+                status="active",
+                days_remaining=days_remaining,
+                is_blocked=False,
+                message=f"Assinatura ativa! Próximo pagamento em {days_remaining} dias.",
+                needs_payment=False
+            )
+        else:
+            # Payment overdue, enter grace period
+            grace_end = next_payment + timedelta(days=5)
+            if now < grace_end:
+                days_remaining = (grace_end - now).days
+                await db.subscriptions.update_one(
+                    {"id": subscription_doc["id"]},
+                    {"$set": {"status": "overdue", "payment_due_date": grace_end.isoformat()}}
+                )
+                return SubscriptionStatus(
+                    has_subscription=True,
+                    status="overdue",
+                    days_remaining=days_remaining,
+                    is_blocked=False,
+                    payment_due_date=grace_end.strftime("%d/%m/%Y"),
+                    message=f"Pagamento em atraso! Restam {days_remaining} dias para pagar R$30,00.",
+                    needs_payment=True
+                )
+            else:
+                # Block user
+                await db.subscriptions.update_one(
+                    {"id": subscription_doc["id"]},
+                    {"$set": {"status": "blocked", "blocked_at": now.isoformat()}}
+                )
+                return SubscriptionStatus(
+                    has_subscription=True,
+                    status="blocked",
+                    is_blocked=True,
+                    message="Assinatura bloqueada! Pague R$30,00 para reativar o aplicativo.",
+                    needs_payment=True
+                )
+    
+    # Already blocked
+    elif subscription_doc["status"] == "blocked":
+        return SubscriptionStatus(
+            has_subscription=True,
+            status="blocked",
+            is_blocked=True,
+            message="Assinatura bloqueada! Pague R$30,00 para reativar o aplicativo.",
+            needs_payment=True
+        )
+    
+    # Default fallback
+    return SubscriptionStatus(
+        has_subscription=False,
+        status="unknown",
+        is_blocked=True,
+        message="Status desconhecido. Entre em contato com o suporte.",
+        needs_payment=True
+    )
+
+@api_router.post("/confirm-payment")
+async def confirm_payment(
+    payment_data: PaymentConfirmation,
+    current_user: User = Depends(get_current_user)
+):
+    """Confirm payment and reactivate subscription"""
+    
+    # Find subscription
+    subscription_doc = await db.subscriptions.find_one({
+        "id": payment_data.subscription_id,
+        "user_id": current_user.id
+    })
+    
+    if not subscription_doc:
+        raise HTTPException(status_code=404, detail="Assinatura não encontrada")
+    
+    now = datetime.now(timezone.utc)
+    next_payment = now + timedelta(days=30)  # Next billing cycle
+    
+    # Update subscription to active
+    await db.subscriptions.update_one(
+        {"id": payment_data.subscription_id},
+        {"$set": {
+            "status": "active",
+            "last_payment_date": now.isoformat(),
+            "next_payment": next_payment.isoformat(),
+            "is_trial": False,
+            "blocked_at": None
+        }}
+    )
+    
+    return {"success": True, "message": "Pagamento confirmado! Assinatura reativada com sucesso."}
+
 # Alert routes
 @api_router.post("/alerts")
 async def create_alert(
