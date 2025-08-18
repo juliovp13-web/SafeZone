@@ -182,7 +182,13 @@ const translations = {
     boleto: "Bordereau bancaire",
     swiftWire: "Virement SWIFT",
     countryCode: "Code pays",
-    neighborhood: "Quartier"
+    neighborhood: "Quartier",
+    // Admin translations
+    totalUsers: "Total Utilisateurs",
+    activeSubscriptions: "Abonnements Actifs",
+    totalAlerts: "Total Alertes",
+    pendingMessages: "Messages En Attente",
+    adminFullAccess: "Les administrateurs ont un accès complet : Panneau de contrôle, gestion des utilisateurs, messages de support et statut VIP permanent (aucun paiement d'abonnement requis)."
   },
   it: {
     appName: "SafeZone",
