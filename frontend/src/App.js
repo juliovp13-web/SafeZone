@@ -119,7 +119,31 @@ const translations = {
     activeSubscriptions: "Active Subscriptions",
     totalAlerts: "Total Alerts",
     pendingMessages: "Pending Messages",
-    adminFullAccess: "Admins have full access: Control panel, user management, support messages and permanent VIP status (no subscription payment required)."
+    adminFullAccess: "Admins have full access: Control panel, user management, support messages and permanent VIP status (no subscription payment required).",
+    // Login/Register page translations
+    adminLogin: "Admin Login",
+    adminPanel: "Administrative Panel",
+    adminEmail: "Administrative Email",
+    loginAsAdmin: "Login as Admin",
+    adminAccess: "Restricted access to support team",
+    adminDescription: "Access to control panel, support messages and user management",
+    // Registration form translations
+    registerTitle: "Registration",
+    fullName: "Full Name",
+    state: "State/Province",
+    city: "City",
+    street: "Street",
+    number: "Number",
+    residentsCount: "Number of residents",
+    residentName: "Resident name",
+    completeRegistration: "Complete Registration",
+    // Feature descriptions
+    instantAlerts: "Instant break-in, robbery or emergency alerts",
+    exactLocation: "Exact location of incident on map",
+    fullScreenNotifications: "Full-screen notifications for maximum attention",
+    neighborNetwork: "Network of neighbors united for security",
+    alertHistory: "Alert history for monitoring",
+    communityHelp: "Help us maintain the best security app ever created. Your subscription keeps the technology active and protects the entire community."
   },
   es: {
     appName: "SafeZone",
