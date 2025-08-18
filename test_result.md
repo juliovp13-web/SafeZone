@@ -294,12 +294,10 @@
 
 ## test_plan:
   current_focus:
-    - "Sistema Admin Automatico (julio.csds@hotmail.com)"
-    - "Sistema VIP Bypass (/api/subscription-status)"
-    - "Endpoints Admin (/api/admin/*)"
-    - "Sistema de Ajuda (/api/help)"
-    - "Sistema Set Admin (/api/admin/set-admin)"
-    - "Sistema de Cancelamento (/api/cancel-subscription)"
+    - "Login Frontend com credenciais admin (julio.csds@hotmail.com)"
+    - "Interface de Admin Dashboard" 
+    - "Funcionalidades Admin no Frontend"
+    - "Navegação e UX admin"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
