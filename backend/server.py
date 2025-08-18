@@ -181,8 +181,13 @@ def prepare_for_mongo(data):
 def parse_from_mongo(item):
     """Parse datetime strings back from MongoDB"""
     if isinstance(item, dict):
+        datetime_fields = [
+            'created_at', 'timestamp', 'start_date', 'next_payment', 
+            'trial_end_date', 'payment_due_date', 'grace_period_end', 
+            'last_payment_date', 'blocked_at'
+        ]
         for key, value in item.items():
-            if key in ['created_at', 'timestamp', 'start_date', 'next_payment'] and isinstance(value, str):
+            if key in datetime_fields and isinstance(value, str):
                 try:
                     item[key] = datetime.fromisoformat(value.replace('Z', '+00:00'))
                 except:
