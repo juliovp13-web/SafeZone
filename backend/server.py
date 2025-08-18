@@ -965,6 +965,41 @@ async def respond_help_message(
     
     return {"success": True, "message": "Resposta enviada com sucesso"}
 
+# Emergency notification routes
+@api_router.get("/emergency-notifications")
+async def get_emergency_notifications(current_user: User = Depends(get_current_user)):
+    """Get active emergency notifications for the current user's street"""
+    
+    # Find active alerts from the same street
+    notifications_cursor = db.emergency_notifications.find({
+        "target_users": current_user.id
+    }).sort("created_at", -1).limit(5)
+    
+    notifications = await notifications_cursor.to_list(length=None)
+    
+    response_notifications = []
+    for notif in notifications:
+        notif = parse_from_mongo(notif)
+        
+        # Check if the alert is still active
+        alert_doc = await db.alerts.find_one({
+            "id": notif["alert_id"],
+            "is_active": True
+        })
+        
+        if alert_doc:
+            response_notifications.append({
+                "id": notif["alert_id"],
+                "type": notif["alert_type"],
+                "requester_name": notif["requester_name"],
+                "requester_address": notif["requester_address"],
+                "created_at": notif["created_at"].strftime("%d/%m/%Y %H:%M:%S"),
+                "should_alarm": True,
+                "is_emergency": True
+            })
+    
+    return response_notifications
+
 # Include the router in the main app
 app.include_router(api_router)
 
