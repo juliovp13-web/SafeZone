@@ -777,9 +777,8 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-md mx-auto pt-8 px-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-end items-center mb-4">
             <CountrySelector />
-            <LanguageSelector />
           </div>
           
           <div className="text-center mb-8">
