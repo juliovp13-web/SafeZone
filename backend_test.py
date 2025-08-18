@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 
 class SafeZoneAPITester:
-    def __init__(self, base_url="https://global-user-admin.preview.emergentagent.com"):
+    def __init__(self, base_url="https://login-translator.preview.emergentagent.com"):
         self.base_url = base_url
         self.api_url = f"{base_url}/api"
         self.token = None
