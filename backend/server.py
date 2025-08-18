@@ -160,6 +160,7 @@ class HelpMessage(BaseModel):
     user_id: str
     user_name: str
     user_email: str
+    user_address: str  # Endereço completo formatado
     message: str
     status: str = "pending"  # pending, read, resolved
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
@@ -173,6 +174,7 @@ class HelpMessageResponse(BaseModel):
     id: str
     user_name: str
     user_email: str
+    user_address: str
     message: str
     status: str
     created_at: str
