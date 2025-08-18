@@ -110,6 +110,8 @@ function App() {
   const [alerts, setAlerts] = useState([]);
   const [activeAlert, setActiveAlert] = useState(null);
   const [alertInterval, setAlertInterval] = useState(null);
+  const [emergencyNotifications, setEmergencyNotifications] = useState([]);
+  const [alarmSound, setAlarmSound] = useState(null);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
   
   // Subscription status states
