@@ -151,7 +151,13 @@ const translations = {
     boleto: "Bankbeleg",
     swiftWire: "SWIFT-Überweisung",
     countryCode: "Ländercode",
-    neighborhood: "Nachbarschaft"
+    neighborhood: "Nachbarschaft",
+    // Admin translations
+    totalUsers: "Gesamtbenutzer",
+    activeSubscriptions: "Aktive Abonnements",
+    totalAlerts: "Gesamtwarnungen",
+    pendingMessages: "Ausstehende Nachrichten",
+    adminFullAccess: "Administratoren haben vollen Zugriff: Kontrollfeld, Benutzerverwaltung, Support-Nachrichten und permanenter VIP-Status (keine Abonnementzahlung erforderlich)."
   },
   fr: {
     appName: "SafeZone",
