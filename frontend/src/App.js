@@ -1012,7 +1012,7 @@ function App() {
                 className="w-full mt-2 border-orange-300 text-orange-600 hover:bg-orange-50"
                 onClick={() => setCurrentScreen('admin-login')}
               >
-                🔐 Login Admin
+                🔐 {t.adminLogin}
               </Button>
             </CardContent>
           </Card>
