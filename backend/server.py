@@ -69,6 +69,9 @@ class UserResponse(BaseModel):
     number: str
     neighborhood: str
     resident_names: List[str]
+    is_admin: bool = False
+    is_vip: bool = False
+    vip_expires_at: Optional[str] = None
 
 class Subscription(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
