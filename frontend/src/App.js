@@ -58,7 +58,13 @@ const translations = {
     boleto: "Boleto Bancário",
     swiftWire: "Transferência SWIFT",
     countryCode: "Código do País",
-    neighborhood: "Bairro"
+    neighborhood: "Bairro",
+    // Admin translations
+    totalUsers: "Total Usuários",
+    activeSubscriptions: "Assinaturas Ativas",
+    totalAlerts: "Total Alertas",
+    pendingMessages: "Mensagens Pendentes",
+    adminFullAccess: "Admins têm acesso total: Painel de controle, gerenciamento de usuários, mensagens de suporte e status VIP permanente (não precisam pagar assinatura)."
   },
   en: {
     appName: "SafeZone", 
