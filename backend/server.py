@@ -138,6 +138,12 @@ class PaymentResponse(BaseModel):
     payment_url: Optional[str] = None
     pix_code: Optional[str] = None
     boleto_url: Optional[str] = None
+    # SWIFT Wire Transfer fields
+    swift_code: Optional[str] = None
+    bank_name: Optional[str] = None
+    account_number: Optional[str] = None
+    beneficiary: Optional[str] = None
+    reference: Optional[str] = None
 
 class SubscriptionStatus(BaseModel):
     has_subscription: bool
