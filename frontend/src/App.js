@@ -15,7 +15,7 @@ import {
   Bell, 
   Users, 
   BarChart3, 
-  UserSecret, 
+  User, 
   Mask, 
   AlertTriangle,
   LogOut,
