@@ -1082,7 +1082,7 @@ function App() {
             <CardContent className="p-6">
               <form onSubmit={handleRegistration} className="space-y-4">
                 <div>
-                  <Label htmlFor="reg-name">Nome Completo</Label>
+                  <Label htmlFor="reg-name">{t.fullName}</Label>
                   <Input
                     id="reg-name"
                     value={registerForm.name}
