@@ -235,6 +235,7 @@ function App() {
   const [emergencyNotifications, setEmergencyNotifications] = useState([]);
   const [alarmSound, setAlarmSound] = useState(null);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
+  const [countryDropdownOpen, setCountryDropdownOpen] = useState(false);
   
   // Subscription status states
   const [subscriptionStatus, setSubscriptionStatus] = useState(null);
