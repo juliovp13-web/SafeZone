@@ -229,7 +229,31 @@ const translations = {
     activeSubscriptions: "Aktive Abonnements",
     totalAlerts: "Gesamtwarnungen",
     pendingMessages: "Ausstehende Nachrichten",
-    adminFullAccess: "Administratoren haben vollen Zugriff: Kontrollfeld, Benutzerverwaltung, Support-Nachrichten und permanenter VIP-Status (keine Abonnementzahlung erforderlich)."
+    adminFullAccess: "Administratoren haben vollen Zugriff: Kontrollfeld, Benutzerverwaltung, Support-Nachrichten und permanenter VIP-Status (keine Abonnementzahlung erforderlich).",
+    // Login/Register page translations
+    adminLogin: "Admin Login",
+    adminPanel: "Administrationsbereich",
+    adminEmail: "Administrative E-Mail",
+    loginAsAdmin: "Als Admin anmelden",
+    adminAccess: "Beschränkter Zugang für das Support-Team",
+    adminDescription: "Zugang zu Kontrollfeld, Support-Nachrichten und Benutzerverwaltung",
+    // Registration form translations
+    registerTitle: "Registrierung",
+    fullName: "Vollständiger Name",
+    state: "Staat/Bundesland",
+    city: "Stadt",
+    street: "Straße",
+    number: "Nummer",
+    residentsCount: "Anzahl der Bewohner",
+    residentName: "Name des Bewohners",
+    completeRegistration: "Registrierung abschließen",
+    // Feature descriptions
+    instantAlerts: "Sofortige Einbruchs-, Raub- oder Notfallwarnungen",
+    exactLocation: "Genaue Position des Vorfalls auf der Karte",
+    fullScreenNotifications: "Vollbildbenachrichtigungen für maximale Aufmerksamkeit",
+    neighborNetwork: "Netzwerk von Nachbarn vereint für Sicherheit",
+    alertHistory: "Warnungshistorie zur Überwachung",
+    communityHelp: "Helfen Sie uns, die beste Sicherheits-App aller Zeiten zu erhalten. Ihr Abonnement hält die Technologie aktiv und schützt die gesamte Gemeinschaft."
   },
   fr: {
     appName: "SafeZone",
