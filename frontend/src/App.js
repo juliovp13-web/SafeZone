@@ -211,7 +211,7 @@ function App() {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
     name: '', email: '', password: '', state: '', city: '', neighborhood: '', 
-    street: '', number: '', residentsCount: 1, residentNames: ['']
+    street: '', number: '', residentsCount: 1, residentNames: [''], country_code: 'BRA'
   });
   const [paymentForm, setPaymentForm] = useState({
     paymentMethod: 'swift-wire',
