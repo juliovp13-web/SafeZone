@@ -1141,7 +1141,7 @@ function App() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-street">Rua</Label>
+                  <Label htmlFor="reg-street">{t.street}</Label>
                   <Input
                     id="reg-street"
                     value={registerForm.street}
