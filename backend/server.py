@@ -273,20 +273,27 @@ async def create_subscription(
     # Check if user already has an active subscription
     existing_sub = await db.subscriptions.find_one({
         "user_id": current_user.id,
-        "status": "active"
+        "status": {"$nin": ["cancelled", "expired"]}
     })
     
     if existing_sub:
         raise HTTPException(status_code=400, detail="Usuário já possui assinatura ativa")
     
-    # Calculate next payment date (1 month from now for trial)
-    next_payment = datetime.now(timezone.utc) + timedelta(days=30)
+    # Calculate dates for new billing logic
+    now = datetime.now(timezone.utc)
+    trial_end = now + timedelta(days=30)
+    payment_due = trial_end + timedelta(days=5)  # 5 days grace period
     
-    # Create subscription
+    # Create subscription with trial status
     subscription = Subscription(
         user_id=current_user.id,
         payment_method=subscription_data.payment_method,
-        next_payment=next_payment
+        status="trial",
+        trial_end_date=trial_end,
+        next_payment=trial_end,
+        payment_due_date=payment_due,
+        grace_period_end=payment_due,
+        is_trial=True
     )
     
     subscription_dict = subscription.dict()
@@ -295,18 +302,18 @@ async def create_subscription(
     await db.subscriptions.insert_one(subscription_dict)
     
     # Generate payment response based on method
-    payment_response = PaymentResponse(success=True, message="Assinatura criada com sucesso!")
+    payment_response = PaymentResponse(success=True, message="Assinatura criada com sucesso! Período gratuito de 30 dias iniciado.")
     
     if subscription_data.payment_method == "pix":
         payment_response.pix_code = "09b74dd4-64da-4563-b769-95cec83659f0"
-        payment_response.message = "Use o código PIX para pagamento instantâneo"
+        payment_response.message = "Assinatura criada! Você terá 30 dias gratuitos. Use este código PIX quando necessário."
     elif subscription_data.payment_method == "boleto":
         payment_response.boleto_url = "https://exemplo.com/boleto/123456"
-        payment_response.message = "Boleto gerado com sucesso. Vencimento em 2 dias úteis."
+        payment_response.message = "Assinatura criada! Você terá 30 dias gratuitos. Boleto disponível quando necessário."
     elif subscription_data.payment_method == "credit-card":
         # In production, this would integrate with Mercado Pago
         payment_response.payment_url = "link.mercadopago.com.br/hopez"
-        payment_response.message = "Cartão processado com sucesso!"
+        payment_response.message = "Assinatura criada! Você terá 30 dias gratuitos. Cartão será cobrado após o período."
     
     return payment_response
 
