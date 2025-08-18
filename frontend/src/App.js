@@ -112,6 +112,10 @@ function App() {
   const [alertInterval, setAlertInterval] = useState(null);
   const [languageDropdownOpen, setLanguageDropdownOpen] = useState(false);
   
+  // Subscription status states
+  const [subscriptionStatus, setSubscriptionStatus] = useState(null);
+  const [isBlocked, setIsBlocked] = useState(false);
+  
   // Form states
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({
@@ -131,6 +135,16 @@ function App() {
       fetchProfile();
     }
   }, [token]);
+
+  // Check subscription status periodically
+  useEffect(() => {
+    if (token && user) {
+      checkSubscriptionStatus();
+      // Check every 30 minutes
+      const interval = setInterval(checkSubscriptionStatus, 30 * 60 * 1000);
+      return () => clearInterval(interval);
+    }
+  }, [token, user]);
 
   // Fetch user profile
   const fetchProfile = async () => {
