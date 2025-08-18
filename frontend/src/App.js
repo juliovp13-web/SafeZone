@@ -707,6 +707,46 @@ function App() {
     setRegisterForm(prev => ({ ...prev, residentsCount: count, residentNames: newNames }));
   };
 
+  // Render Country Selector with Flags
+  const CountrySelector = () => (
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={() => setCountryDropdownOpen(!countryDropdownOpen)}
+        className="flex items-center space-x-1 p-2 h-8"
+      >
+        <span className="text-xl">{countryInfo.flag}</span>
+        <span className="text-xs font-medium">{currentCountry}</span>
+      </Button>
+      {countryDropdownOpen && (
+        <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-50 border max-h-80 overflow-y-auto">
+          <div className="py-1">
+            {Object.entries(countryMappings).map(([code, info]) => (
+              <button
+                key={code}
+                className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center justify-between"
+                onClick={() => {
+                  handleCountryChange(code);
+                  setCountryDropdownOpen(false);
+                }}
+              >
+                <div className="flex items-center space-x-2">
+                  <span className="text-lg">{info.flag}</span>
+                  <span className="text-sm">{info.country}</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <span className="text-xs text-gray-500">{code}</span>
+                  <span className="text-xs font-medium">{info.currencySymbol}</span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   // Render Language Selector
   const LanguageSelector = () => (
     <div className="relative">
