@@ -344,7 +344,6 @@
   current_focus:
     - "Campo Bairro Duplicado Corrigido"
     - "Sistema Seletor de País com Bandeiras"
-    - "Sistema SWIFT Backend"
     - "Sistema Câmbio Expandido"
   stuck_tasks: []
   test_all: false
