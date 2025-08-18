@@ -726,7 +726,20 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-md mx-auto pt-8 px-6">
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-between mb-4">
+            {/* Country Selector */}
+            <div className="flex items-center space-x-2">
+              <Globe className="w-4 h-4 text-blue-600" />
+              <Input
+                placeholder={t.countryCode || "Código do País"}
+                value={countryInput}
+                onChange={(e) => setCountryInput(e.target.value)}
+                onBlur={() => handleCountryChange(countryInput)}
+                onKeyPress={(e) => e.key === 'Enter' && handleCountryChange(countryInput)}
+                className="w-20 h-8 text-xs"
+              />
+              <span className="text-xs text-gray-600">{countryInfo.country}</span>
+            </div>
             <LanguageSelector />
           </div>
           
@@ -782,11 +795,20 @@ function App() {
             </CardContent>
           </Card>
 
-          {/* Pricing Card */}
+          {/* Pricing Card with Real-time Exchange */}
           <Card className="bg-blue-50 border-blue-200">
             <CardContent className="p-6">
-              <p className="text-center font-bold text-blue-800 mb-2">{t.price}</p>
-              <p className="text-center text-sm text-gray-600 mb-4">{t.priceDesc}</p>
+              <div className="text-center mb-4">
+                <p className="font-bold text-blue-800 mb-2">
+                  {t.price.replace('{price}', getLocalizedPrice())}
+                </p>
+                <p className="text-xs text-gray-500">
+                  {countryInfo.country} • {countryInfo.currency} • {countryInfo.paymentMethod}
+                </p>
+              </div>
+              <p className="text-center text-sm text-gray-600 mb-4">
+                {t.priceDesc}
+              </p>
               
               <div className="space-y-3 text-sm">
                 <div className="flex items-start">
