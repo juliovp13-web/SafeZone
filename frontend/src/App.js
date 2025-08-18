@@ -213,7 +213,13 @@ const translations = {
     boleto: "Ricevuta bancaria",
     swiftWire: "Bonifico SWIFT",
     countryCode: "Codice paese",
-    neighborhood: "Quartiere"
+    neighborhood: "Quartiere",
+    // Admin translations
+    totalUsers: "Totale Utenti",
+    activeSubscriptions: "Abbonamenti Attivi",
+    totalAlerts: "Totale Avvisi",
+    pendingMessages: "Messaggi In Sospeso",
+    adminFullAccess: "Gli amministratori hanno accesso completo: Pannello di controllo, gestione utenti, messaggi di supporto e stato VIP permanente (nessun pagamento di abbonamento richiesto)."
   }
 };
 
