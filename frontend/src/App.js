@@ -788,20 +788,8 @@ function App() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
         <div className="max-w-md mx-auto pt-8 px-6">
-          <div className="flex justify-between mb-4">
-            {/* Country Selector */}
-            <div className="flex items-center space-x-2">
-              <Globe className="w-4 h-4 text-blue-600" />
-              <Input
-                placeholder={t.countryCode || "Código do País"}
-                value={countryInput}
-                onChange={(e) => setCountryInput(e.target.value)}
-                onBlur={() => handleCountryChange(countryInput)}
-                onKeyPress={(e) => e.key === 'Enter' && handleCountryChange(countryInput)}
-                className="w-20 h-8 text-xs"
-              />
-              <span className="text-xs text-gray-600">{countryInfo.country}</span>
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <CountrySelector />
             <LanguageSelector />
           </div>
           
