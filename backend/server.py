@@ -854,8 +854,18 @@ async def cancel_subscription(current_user: User = Depends(get_current_user)):
 async def get_admin_stats(current_admin: User = Depends(get_current_admin)):
     """Get admin statistics dashboard"""
     
-    # Count users
-    total_users = await db.users.count_documents({})
+    # Filter real users - count only users who:
+    # 1. Have filled all mandatory fields (name, email, country)
+    # 2. Don't have test emails (@test.com) or generic names (like "teste")  
+    # 3. Have logged in at least once (last_login exists)
+    real_users_filter = {
+        "name": {"$exists": True, "$ne": "", "$not": {"$regex": "^(test|teste|admin|usuario|user)$", "$options": "i"}},
+        "email": {"$exists": True, "$not": {"$regex": "@test\\.com$", "$options": "i"}},
+        "country_code": {"$exists": True, "$ne": ""},
+        "last_login": {"$exists": True, "$ne": None}
+    }
+    
+    total_users = await db.users.count_documents(real_users_filter)
     
     # Count subscriptions by status
     total_subs = await db.subscriptions.count_documents({})
