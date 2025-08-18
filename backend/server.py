@@ -214,6 +214,48 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         raise HTTPException(status_code=401, detail="User not found")
     return User(**user)
 
+def is_vip_active(user: User) -> bool:
+    """Check if user has active VIP status"""
+    if not user.is_vip:
+        return False
+    
+    # If vip_expires_at is None, it's permanent VIP
+    if user.vip_expires_at is None:
+        return True
+    
+    # Check if VIP hasn't expired
+    now = datetime.now(timezone.utc)
+    return user.vip_expires_at > now
+
+async def ensure_admin_exists():
+    """Ensure julio.csds@hotmail.com is set as permanent admin"""
+    admin_email = "julio.csds@hotmail.com"
+    
+    # Check if admin user exists
+    admin_user = await db.users.find_one({"email": admin_email})
+    
+    if admin_user:
+        # Update existing user to be admin/VIP if not already
+        if not admin_user.get("is_admin") or not admin_user.get("is_vip"):
+            await db.users.update_one(
+                {"email": admin_email},
+                {"$set": {
+                    "is_admin": True,
+                    "is_vip": True,
+                    "vip_expires_at": None  # Permanent VIP
+                }}
+            )
+            print(f"✅ Updated {admin_email} to permanent admin/VIP status")
+    else:
+        print(f"ℹ️  Admin user {admin_email} does not exist yet. Will be set when they register.")
+
+async def get_current_admin(credentials: HTTPAuthorizationCredentials = Depends(security)):
+    """Get current user and verify admin privileges"""
+    user = await get_current_user(credentials)
+    if not user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin privileges required")
+    return user
+
 def prepare_for_mongo(data):
     """Convert datetime objects to ISO strings for MongoDB storage"""
     if isinstance(data, dict):
