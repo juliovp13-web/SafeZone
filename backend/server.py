@@ -325,9 +325,11 @@ async def register_user(user_data: UserCreate):
     user = User(
         name=user_data.name,
         email=user_data.email,
+        state=user_data.state,
+        city=user_data.city,
+        neighborhood=user_data.neighborhood,
         street=user_data.street,
         number=user_data.number,
-        neighborhood=user_data.neighborhood,
         resident_names=user_data.resident_names,
         is_admin=is_admin_email,
         is_vip=is_admin_email,
