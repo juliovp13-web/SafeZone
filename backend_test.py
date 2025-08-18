@@ -1453,10 +1453,151 @@ class SafeZoneAPITester:
             print("⚠️  Some tests failed!")
             return 1
 
+    def test_specific_admin_login_review_request(self):
+        """Test specific admin login as requested in review request"""
+        print("\n🎯 TESTE ESPECÍFICO: LOGIN ADMIN CONFORME REVIEW REQUEST")
+        print("=" * 70)
+        print("Testando login de admin com as credenciais específicas:")
+        print("Email: julio.csds@hotmail.com")
+        print("Senha: Corinthians12@@@")
+        print("=" * 70)
+        
+        # Test 1: Login Admin Backend with specific credentials
+        login_data = {
+            "email": "julio.csds@hotmail.com",
+            "password": "Corinthians12@@@"
+        }
+        
+        success, login_response = self.run_test(
+            "POST /api/login com credenciais específicas",
+            "POST",
+            "login",
+            200,
+            data=login_data
+        )
+        
+        if not success:
+            print("❌ FALHA: Login com credenciais específicas falhou")
+            return False
+        
+        print("\n🔍 VERIFICANDO RESPONSE DO LOGIN:")
+        print("=" * 40)
+        
+        # Test 2: Verify response contains access_token (valid JWT)
+        if 'access_token' not in login_response:
+            print("❌ FALHA: access_token não encontrado na response")
+            self.log_test("Access Token Verification", False, "access_token missing")
+            return False
+        
+        access_token = login_response['access_token']
+        print(f"✅ access_token encontrado: {access_token[:30]}...")
+        
+        # Test 3: Verify user object exists
+        if 'user' not in login_response:
+            print("❌ FALHA: user object não encontrado na response")
+            self.log_test("User Object Verification", False, "user object missing")
+            return False
+        
+        user = login_response['user']
+        print(f"✅ user object encontrado")
+        
+        # Test 4: Verify user.email = julio.csds@hotmail.com
+        if user.get('email') != 'julio.csds@hotmail.com':
+            print(f"❌ FALHA: user.email incorreto. Esperado: julio.csds@hotmail.com, Recebido: {user.get('email')}")
+            self.log_test("User Email Verification", False, f"Expected julio.csds@hotmail.com, got {user.get('email')}")
+            return False
+        
+        print(f"✅ user.email correto: {user.get('email')}")
+        
+        # Test 5: Verify is_admin=true
+        if user.get('is_admin') != True:
+            print(f"❌ FALHA: is_admin incorreto. Esperado: true, Recebido: {user.get('is_admin')}")
+            self.log_test("Admin Status Verification", False, f"Expected true, got {user.get('is_admin')}")
+            return False
+        
+        print(f"✅ is_admin correto: {user.get('is_admin')}")
+        
+        # Test 6: Verify is_vip=true
+        if user.get('is_vip') != True:
+            print(f"❌ FALHA: is_vip incorreto. Esperado: true, Recebido: {user.get('is_vip')}")
+            self.log_test("VIP Status Verification", False, f"Expected true, got {user.get('is_vip')}")
+            return False
+        
+        print(f"✅ is_vip correto: {user.get('is_vip')}")
+        
+        # Test 7: Verify JWT token is valid by making authenticated request
+        old_token = self.token
+        self.token = access_token
+        
+        success, profile_response = self.run_test(
+            "Validar JWT Token com GET /api/profile",
+            "GET",
+            "profile",
+            200
+        )
+        
+        self.token = old_token
+        
+        if not success:
+            print("❌ FALHA: JWT token inválido - não conseguiu acessar /api/profile")
+            self.log_test("JWT Token Validation", False, "Token failed profile access")
+            return False
+        
+        print(f"✅ JWT token válido - acesso a /api/profile funcionou")
+        
+        # Final success summary
+        print("\n🎉 TESTE ESPECÍFICO ADMIN LOGIN - SUCESSO COMPLETO!")
+        print("=" * 60)
+        print("✅ POST /api/login funcionou com credenciais específicas")
+        print("✅ access_token (JWT válido) retornado")
+        print("✅ user object retornado corretamente")
+        print("✅ user.email = julio.csds@hotmail.com")
+        print("✅ user.is_admin = true")
+        print("✅ user.is_vip = true")
+        print("✅ JWT token validado com sucesso")
+        print("=" * 60)
+        print("🚀 Sistema de login admin está 100% funcional!")
+        
+        self.log_test("Specific Admin Login Review Test", True, "All requirements met")
+        return True
+
+    def run_review_request_test(self):
+        """Run the specific test requested in the review"""
+        print("🚀 EXECUTANDO TESTE CONFORME REVIEW REQUEST")
+        print("=" * 70)
+        print("CONTEXTO: Testar o login de admin com as credenciais específicas")
+        print("CREDENCIAIS: julio.csds@hotmail.com / Corinthians12@@@")
+        print("EXPECTATIVA: Login deve funcionar perfeitamente com privilégios admin/VIP")
+        print("=" * 70)
+        
+        # Run the specific test
+        success = self.test_specific_admin_login_review_request()
+        
+        # Print final results
+        print("\n" + "=" * 70)
+        print("📊 RESULTADO DO TESTE REVIEW REQUEST")
+        print("=" * 70)
+        print(f"Tests Run: {self.tests_run}")
+        print(f"Tests Passed: {self.tests_passed}")
+        print(f"Tests Failed: {self.tests_run - self.tests_passed}")
+        print(f"Success Rate: {(self.tests_passed/self.tests_run)*100:.1f}%")
+        
+        if success:
+            print("🎉 TESTE REVIEW REQUEST: SUCESSO TOTAL!")
+            print("✅ Login de admin funcionando perfeitamente")
+            print("✅ Token JWT gerado corretamente")
+            print("✅ Usuário reconhecido como admin automaticamente")
+            print("✅ Sistema pronto para uso pelo proprietário")
+            return 0
+        else:
+            print("❌ TESTE REVIEW REQUEST: FALHOU!")
+            print("⚠️  Problemas encontrados no login admin")
+            return 1
+
 def main():
     tester = SafeZoneAPITester()
-    # Run SWIFT system tests as requested in review
-    return tester.run_swift_tests()
+    # Run specific test as requested in review
+    return tester.run_review_request_test()
 
 if __name__ == "__main__":
     sys.exit(main())
