@@ -234,6 +234,74 @@ function App() {
   const t = translations[currentLanguage];
   const countryInfo = countryMappings[currentCountry] || countryMappings['BRA'];
 
+  // Fetch exchange rates on load
+  useEffect(() => {
+    fetchExchangeRates();
+    // Update rates every 5 minutes
+    const interval = setInterval(fetchExchangeRates, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Fetch real-time exchange rates
+  const fetchExchangeRates = async () => {
+    try {
+      const response = await fetch('https://api.exchangerate-api.com/v4/latest/USD');
+      const data = await response.json();
+      setExchangeRates(data.rates);
+    } catch (error) {
+      console.error('Failed to fetch exchange rates:', error);
+      // Fallback rates if API fails
+      setExchangeRates({
+        BRL: 5.2,
+        USD: 1.0,
+        EUR: 0.85,
+        PHP: 56.5,
+        ARS: 365.0,
+        MXN: 17.8,
+        CAD: 1.35
+      });
+    }
+  };
+
+  // Calculate localized price
+  const getLocalizedPrice = () => {
+    const basePrice = 30; // Base price in BRL
+    const baseCurrency = 'BRL';
+    const targetCurrency = countryInfo.currency;
+    
+    if (targetCurrency === baseCurrency) {
+      return `${countryInfo.currencySymbol} ${basePrice.toFixed(2)}`;
+    }
+    
+    const brlRate = exchangeRates['BRL'] || 5.2;
+    const targetRate = exchangeRates[targetCurrency] || 1;
+    const usdPrice = basePrice / brlRate; // Convert BRL to USD first
+    const localPrice = usdPrice * targetRate; // Convert USD to target currency
+    
+    return `${countryInfo.currencySymbol} ${localPrice.toFixed(2)}`;
+  };
+
+  // Handle country code change
+  const handleCountryChange = (code) => {
+    const upperCode = code.toUpperCase();
+    if (countryMappings[upperCode]) {
+      setCurrentCountry(upperCode);
+      setCurrentLanguage(countryMappings[upperCode].lang);
+      
+      // Update payment method based on country
+      if (upperCode === 'BRA') {
+        setPaymentForm(prev => ({ ...prev, paymentMethod: 'pix' }));
+      } else {
+        setPaymentForm(prev => ({ ...prev, paymentMethod: 'swift-wire' }));
+      }
+      
+      toast({
+        title: `País alterado para ${countryMappings[upperCode].country}`,
+        description: `Idioma: ${countryMappings[upperCode].lang.toUpperCase()}, Moeda: ${countryMappings[upperCode].currency}`
+      });
+    }
+  };
+
   // Authentication check on load
   useEffect(() => {
     if (token) {
