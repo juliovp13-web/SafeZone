@@ -771,7 +771,7 @@ function App() {
                   {alerts.map((alert, index) => (
                     <div key={index} className="flex items-center p-3 border rounded-lg">
                       {alert.type === 'invasão' && <User className="w-5 h-5 text-red-500 mr-3" />}
-                      {alert.type === 'roubo' && <Mask className="w-5 h-5 text-orange-500 mr-3" />}
+                      {alert.type === 'roubo' && <Eye className="w-5 h-5 text-orange-500 mr-3" />}
                       {alert.type === 'emergência' && <AlertTriangle className="w-5 h-5 text-yellow-500 mr-3" />}
                       <div className="flex-1">
                         <div className="flex items-center justify-between">
