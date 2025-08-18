@@ -800,7 +800,7 @@ function App() {
         <div className="text-center max-w-md">
           <div className="mb-6">
             {activeAlert.type === 'invasão' && <User className="w-24 h-24 mx-auto text-red-500 animate-bounce" />}
-            {activeAlert.type === 'roubo' && <Mask className="w-24 h-24 mx-auto text-orange-500 animate-bounce" />}
+            {activeAlert.type === 'roubo' && <Eye className="w-24 h-24 mx-auto text-orange-500 animate-bounce" />}
             {activeAlert.type === 'emergência' && <AlertTriangle className="w-24 h-24 mx-auto text-yellow-500 animate-bounce" />}
           </div>
           
