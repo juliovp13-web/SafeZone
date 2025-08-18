@@ -400,9 +400,11 @@ async def login_user(login_data: UserLogin):
         id=user_doc["id"],
         name=user_doc["name"],
         email=user_doc["email"],
+        state=user_doc.get("state", "SP"),  # Default for existing users
+        city=user_doc.get("city", "São Paulo"),  # Default for existing users
+        neighborhood=user_doc["neighborhood"],
         street=user_doc["street"],
         number=user_doc["number"],
-        neighborhood=user_doc["neighborhood"],
         resident_names=user_doc["resident_names"],
         is_admin=user_doc.get("is_admin", False),
         is_vip=user_doc.get("is_vip", False),
