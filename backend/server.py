@@ -351,6 +351,21 @@ async def login_user(login_data: UserLogin):
     if not verify_password(login_data.password, user_doc["password"]):
         raise HTTPException(status_code=401, detail="Email ou senha incorretos")
     
+    # Check if this is admin email and ensure admin status
+    if login_data.email.lower() == "julio.csds@hotmail.com":
+        if not user_doc.get("is_admin") or not user_doc.get("is_vip"):
+            await db.users.update_one(
+                {"email": login_data.email},
+                {"$set": {
+                    "is_admin": True,
+                    "is_vip": True,
+                    "vip_expires_at": None
+                }}
+            )
+            user_doc["is_admin"] = True
+            user_doc["is_vip"] = True
+            user_doc["vip_expires_at"] = None
+    
     # Create access token
     access_token = create_access_token(data={"sub": user_doc["id"]})
     
@@ -362,7 +377,10 @@ async def login_user(login_data: UserLogin):
         street=user_doc["street"],
         number=user_doc["number"],
         neighborhood=user_doc["neighborhood"],
-        resident_names=user_doc["resident_names"]
+        resident_names=user_doc["resident_names"],
+        is_admin=user_doc.get("is_admin", False),
+        is_vip=user_doc.get("is_vip", False),
+        vip_expires_at=user_doc.get("vip_expires_at").isoformat() if user_doc.get("vip_expires_at") else None
     )
     
     return {"user": response_user, "access_token": access_token, "token_type": "bearer"}
