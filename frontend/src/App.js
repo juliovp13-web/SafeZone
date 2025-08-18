@@ -1495,8 +1495,8 @@ function App() {
                 <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Shield className="w-8 h-8 text-orange-600" />
                 </div>
-                <h3 className="text-lg font-semibold text-orange-800">Painel Administrativo</h3>
-                <p className="text-sm text-gray-600">Acesso restrito à equipe de suporte</p>
+                <h3 className="text-lg font-semibold text-orange-800">{t.adminPanel}</h3>
+                <p className="text-sm text-gray-600">{t.adminAccess}</p>
               </div>
 
               <form onSubmit={handleLogin} className="space-y-4">
