@@ -561,7 +561,8 @@ function App() {
         neighborhood: registerForm.neighborhood,
         street: registerForm.street,
         number: registerForm.number,
-        resident_names: registerForm.residentNames.filter(name => name.trim())
+        resident_names: registerForm.residentNames.filter(name => name.trim()),
+        country_code: registerForm.country_code
       });
       
       const { access_token, user: userData } = response.data;
