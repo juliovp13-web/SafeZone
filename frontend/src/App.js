@@ -153,8 +153,14 @@ function App() {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
-      setCurrentScreen('main');
-      fetchAlerts();
+      
+      // Redirect admin to dashboard, regular users to main
+      if (response.data.is_admin) {
+        setCurrentScreen('admin-dashboard');
+      } else {
+        setCurrentScreen('main');
+        fetchAlerts();
+      }
     } catch (error) {
       console.error('Profile fetch failed:', error);
       localStorage.removeItem('token');
