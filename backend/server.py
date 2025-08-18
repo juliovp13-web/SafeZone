@@ -39,9 +39,11 @@ class User(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     name: str
     email: EmailStr
-    street: str
-    number: str
-    neighborhood: str
+    state: str  # Estado (ex: SP, RJ, MG)
+    city: str   # Cidade (ex: São Paulo, Rio de Janeiro)
+    neighborhood: str  # Bairro (ex: Centro, Vila Olímpia)
+    street: str  # Rua (ex: Rua das Flores, Av. Paulista)
+    number: str  # Número (ex: 123, 456-A)
     resident_names: List[str]
     is_admin: bool = False
     is_vip: bool = False
