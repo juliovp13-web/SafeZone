@@ -195,6 +195,15 @@ class AdminStats(BaseModel):
     total_alerts: int
     pending_help_messages: int
 
+class EmergencyNotification(BaseModel):
+    alert_id: str
+    alert_type: str
+    requester_name: str
+    requester_address: str
+    target_users: List[str]  # List of user IDs to notify
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    is_silent_for_requester: bool = True  # Requester gets silent notification
+
 # Helper functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
