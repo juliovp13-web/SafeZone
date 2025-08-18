@@ -296,6 +296,9 @@ async def register_user(user_data: UserCreate):
     # Hash password
     hashed_password = get_password_hash(user_data.password)
     
+    # Check if this is the admin email
+    is_admin_email = user_data.email.lower() == "julio.csds@hotmail.com"
+    
     # Create user
     user = User(
         name=user_data.name,
@@ -303,7 +306,10 @@ async def register_user(user_data: UserCreate):
         street=user_data.street,
         number=user_data.number,
         neighborhood=user_data.neighborhood,
-        resident_names=user_data.resident_names
+        resident_names=user_data.resident_names,
+        is_admin=is_admin_email,
+        is_vip=is_admin_email,
+        vip_expires_at=None if is_admin_email else None  # Permanent VIP for admin
     )
     
     # Store user with hashed password
@@ -312,6 +318,9 @@ async def register_user(user_data: UserCreate):
     user_dict = prepare_for_mongo(user_dict)
     
     await db.users.insert_one(user_dict)
+    
+    if is_admin_email:
+        print(f"✅ Admin user registered: {user_data.email}")
     
     # Create access token
     access_token = create_access_token(data={"sub": user.id})
@@ -323,7 +332,10 @@ async def register_user(user_data: UserCreate):
         street=user.street,
         number=user.number,
         neighborhood=user.neighborhood,
-        resident_names=user.resident_names
+        resident_names=user.resident_names,
+        is_admin=user.is_admin,
+        is_vip=user.is_vip,
+        vip_expires_at=user.vip_expires_at.isoformat() if user.vip_expires_at else None
     )
     
     return {"user": response_user, "access_token": access_token, "token_type": "bearer"}
