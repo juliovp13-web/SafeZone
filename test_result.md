@@ -294,11 +294,12 @@
 
 ## test_plan:
   current_focus:
-    - "Sistema de Autenticação (login/registro)"
-    - "Endpoint de Criação de Assinatura (/api/create-subscription)"
-    - "Conexão MongoDB"
-    - "Interface de Seleção de Método de Pagamento"
-    - "Integração com API de Pagamentos"
+    - "Sistema Admin Automatico (julio.csds@hotmail.com)"
+    - "Sistema VIP Bypass (/api/subscription-status)"
+    - "Endpoints Admin (/api/admin/*)"
+    - "Sistema de Ajuda (/api/help)"
+    - "Sistema Set Admin (/api/admin/set-admin)"
+    - "Sistema de Cancelamento (/api/cancel-subscription)"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
