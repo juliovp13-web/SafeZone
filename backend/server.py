@@ -340,6 +340,7 @@ async def register_user(user_data: UserCreate):
         street=user_data.street,
         number=user_data.number,
         resident_names=user_data.resident_names,
+        country_code=user_data.country_code,
         is_admin=is_admin_email,
         is_vip=is_admin_email,
         vip_expires_at=None if is_admin_email else None  # Permanent VIP for admin
