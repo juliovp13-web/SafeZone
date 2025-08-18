@@ -145,6 +145,44 @@ class PaymentConfirmation(BaseModel):
     payment_method: str
     transaction_id: Optional[str] = None
 
+class HelpMessage(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    user_id: str
+    user_name: str
+    user_email: str
+    message: str
+    status: str = "pending"  # pending, read, resolved
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    admin_response: Optional[str] = None
+    resolved_at: Optional[datetime] = None
+
+class HelpMessageCreate(BaseModel):
+    message: str
+
+class HelpMessageResponse(BaseModel):
+    id: str
+    user_name: str
+    user_email: str
+    message: str
+    status: str
+    created_at: str
+    admin_response: Optional[str] = None
+
+class AdminSetRequest(BaseModel):
+    email: EmailStr
+    is_admin: bool
+    is_vip: bool = False
+    vip_permanent: bool = True
+
+class AdminStats(BaseModel):
+    total_users: int
+    total_subscriptions: int
+    active_subscriptions: int
+    trial_subscriptions: int
+    blocked_subscriptions: int
+    total_alerts: int
+    pending_help_messages: int
+
 # Helper functions
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
