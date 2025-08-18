@@ -729,7 +729,7 @@ function App() {
               className="h-24 bg-red-600 hover:bg-red-700 text-white text-xl font-bold"
             >
               <div className="flex flex-col items-center">
-                <UserSecret className="w-8 h-8 mb-2" />
+                <User className="w-8 h-8 mb-2" />
                 <span>{t.invasion}</span>
               </div>
             </Button>
