@@ -739,7 +739,7 @@ function App() {
               className="h-24 bg-orange-500 hover:bg-orange-600 text-white text-xl font-bold"
             >
               <div className="flex flex-col items-center">
-                <Mask className="w-8 h-8 mb-2" />
+                <Eye className="w-8 h-8 mb-2" />
                 <span>{t.robbery}</span>
               </div>
             </Button>
