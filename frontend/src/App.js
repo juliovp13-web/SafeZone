@@ -1486,7 +1486,7 @@ function App() {
             <Button variant="ghost" onClick={() => setCurrentScreen('login')} className="mr-4">
               <ArrowLeft className="w-4 h-4" />
             </Button>
-            <h2 className="text-2xl font-bold text-orange-800">🔐 Login Admin</h2>
+            <h2 className="text-2xl font-bold text-orange-800">🔐 {t.adminLogin}</h2>
           </div>
 
           <Card className="mb-6 border-orange-200">
