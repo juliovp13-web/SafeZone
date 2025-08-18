@@ -891,6 +891,7 @@ async def get_help_messages(current_admin: User = Depends(get_current_admin)):
             id=msg["id"],
             user_name=msg["user_name"],
             user_email=msg["user_email"],
+            user_address=msg.get("user_address", "Endereço não disponível"),
             message=msg["message"],
             status=msg["status"],
             created_at=msg["created_at"].strftime("%d/%m/%Y %H:%M"),
