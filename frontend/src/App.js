@@ -584,7 +584,15 @@ function App() {
   // Handle payment confirmation
   const handlePaymentConfirmation = async () => {
     try {
-      const response = await axios.post(`${API}/create-subscription`, paymentForm, {
+      const paymentData = {
+        ...paymentForm,
+        amount: getLocalizedPrice(),
+        currency: countryInfo.currency,
+        country: countryInfo.country,
+        swift_method: countryInfo.paymentMethod
+      };
+      
+      const response = await axios.post(`${API}/create-subscription`, paymentData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -592,6 +600,14 @@ function App() {
         title: "Assinatura confirmada!",
         description: response.data.message
       });
+      
+      // Show payment details based on method
+      if (paymentForm.paymentMethod === 'swift-wire') {
+        toast({
+          title: "Transferência SWIFT",
+          description: `SWIFT Code: ${response.data.swift_code || 'SAFEBR01'} | Valor: ${getLocalizedPrice()}`
+        });
+      }
       
       setCurrentScreen('main');
       fetchAlerts();
