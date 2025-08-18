@@ -62,6 +62,7 @@ class UserCreate(BaseModel):
     street: str
     number: str
     resident_names: List[str]
+    country_code: Optional[str] = "BRA"  # País do usuário
 
 class UserLogin(BaseModel):
     email: EmailStr
