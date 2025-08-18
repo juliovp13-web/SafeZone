@@ -700,6 +700,195 @@ async def get_profile(current_user: User = Depends(get_current_user)):
         vip_expires_at=current_user.vip_expires_at.isoformat() if current_user.vip_expires_at else None
     )
 
+# Help/Support routes
+@api_router.post("/help")
+async def send_help_message(
+    help_data: HelpMessageCreate,
+    current_user: User = Depends(get_current_user)
+):
+    """Send help message to SafeZone support"""
+    help_message = HelpMessage(
+        user_id=current_user.id,
+        user_name=current_user.name,
+        user_email=current_user.email,
+        message=help_data.message
+    )
+    
+    help_dict = help_message.dict()
+    help_dict = prepare_for_mongo(help_dict)
+    
+    await db.help_messages.insert_one(help_dict)
+    
+    return {"success": True, "message": "Sua mensagem foi enviada com sucesso! Nossa equipe responderá em breve."}
+
+@api_router.post("/cancel-subscription")
+async def cancel_subscription(current_user: User = Depends(get_current_user)):
+    """Cancel user's subscription"""
+    
+    # VIP users cannot cancel (they don't have paid subscriptions)
+    if is_vip_active(current_user):
+        raise HTTPException(status_code=400, detail="Usuários VIP não possuem assinatura para cancelar")
+    
+    # Find user's subscription
+    subscription_doc = await db.subscriptions.find_one({
+        "user_id": current_user.id,
+        "status": {"$nin": ["cancelled", "expired"]}
+    })
+    
+    if not subscription_doc:
+        raise HTTPException(status_code=404, detail="Nenhuma assinatura ativa encontrada")
+    
+    # Cancel subscription
+    now = datetime.now(timezone.utc)
+    await db.subscriptions.update_one(
+        {"id": subscription_doc["id"]},
+        {"$set": {
+            "status": "cancelled",
+            "cancelled_at": now.isoformat()
+        }}
+    )
+    
+    return {"success": True, "message": "Assinatura cancelada com sucesso"}
+
+# Admin routes
+@api_router.get("/admin/stats", response_model=AdminStats)
+async def get_admin_stats(current_admin: User = Depends(get_current_admin)):
+    """Get admin statistics dashboard"""
+    
+    # Count users
+    total_users = await db.users.count_documents({})
+    
+    # Count subscriptions by status
+    total_subs = await db.subscriptions.count_documents({})
+    active_subs = await db.subscriptions.count_documents({"status": "active"})
+    trial_subs = await db.subscriptions.count_documents({"status": "trial"})
+    blocked_subs = await db.subscriptions.count_documents({"status": "blocked"})
+    
+    # Count alerts
+    total_alerts = await db.alerts.count_documents({})
+    
+    # Count pending help messages
+    pending_help = await db.help_messages.count_documents({"status": "pending"})
+    
+    return AdminStats(
+        total_users=total_users,
+        total_subscriptions=total_subs,
+        active_subscriptions=active_subs,
+        trial_subscriptions=trial_subs,
+        blocked_subscriptions=blocked_subs,
+        total_alerts=total_alerts,
+        pending_help_messages=pending_help
+    )
+
+@api_router.get("/admin/users")
+async def get_all_users(current_admin: User = Depends(get_current_admin)):
+    """Get all users for admin management"""
+    
+    users_cursor = db.users.find({}).sort("created_at", -1)
+    users = await users_cursor.to_list(length=None)
+    
+    response_users = []
+    for user in users:
+        user = parse_from_mongo(user)
+        response_users.append({
+            "id": user["id"],
+            "name": user["name"],
+            "email": user["email"],
+            "neighborhood": user["neighborhood"],
+            "is_admin": user.get("is_admin", False),
+            "is_vip": user.get("is_vip", False),
+            "created_at": user["created_at"].strftime("%d/%m/%Y %H:%M")
+        })
+    
+    return response_users
+
+@api_router.get("/admin/help-messages")
+async def get_help_messages(current_admin: User = Depends(get_current_admin)):
+    """Get all help messages for admin review"""
+    
+    messages_cursor = db.help_messages.find({}).sort("created_at", -1)
+    messages = await messages_cursor.to_list(length=None)
+    
+    response_messages = []
+    for msg in messages:
+        msg = parse_from_mongo(msg)
+        response_messages.append(HelpMessageResponse(
+            id=msg["id"],
+            user_name=msg["user_name"],
+            user_email=msg["user_email"],
+            message=msg["message"],
+            status=msg["status"],
+            created_at=msg["created_at"].strftime("%d/%m/%Y %H:%M"),
+            admin_response=msg.get("admin_response")
+        ))
+    
+    return response_messages
+
+@api_router.post("/admin/set-admin")
+async def set_user_admin(
+    admin_data: AdminSetRequest,
+    current_admin: User = Depends(get_current_admin)
+):
+    """Set user as admin/VIP (admin only)"""
+    
+    # Find user by email
+    user_doc = await db.users.find_one({"email": admin_data.email})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="Usuário não encontrado")
+    
+    # Prepare update data
+    update_data = {
+        "is_admin": admin_data.is_admin,
+        "is_vip": admin_data.is_vip
+    }
+    
+    # Set VIP expiration
+    if admin_data.is_vip:
+        if admin_data.vip_permanent:
+            update_data["vip_expires_at"] = None  # Permanent VIP
+        else:
+            # Could add date picker in future for temporary VIP
+            update_data["vip_expires_at"] = None
+    else:
+        update_data["vip_expires_at"] = None
+    
+    await db.users.update_one(
+        {"email": admin_data.email},
+        {"$set": update_data}
+    )
+    
+    action = "promovido a" if admin_data.is_admin else "removido de"
+    vip_text = " e VIP" if admin_data.is_vip else ""
+    
+    return {"success": True, "message": f"Usuário {admin_data.email} {action} admin{vip_text} com sucesso"}
+
+@api_router.put("/admin/help-messages/{message_id}/respond")
+async def respond_help_message(
+    message_id: str,
+    response_data: dict,
+    current_admin: User = Depends(get_current_admin)
+):
+    """Respond to help message (admin only)"""
+    
+    admin_response = response_data.get("response", "")
+    if not admin_response:
+        raise HTTPException(status_code=400, detail="Resposta é obrigatória")
+    
+    now = datetime.now(timezone.utc)
+    result = await db.help_messages.update_one(
+        {"id": message_id},
+        {"$set": {
+            "admin_response": admin_response,
+            "status": "resolved",
+            "resolved_at": now.isoformat()
+        }}
+    )
+    
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Mensagem não encontrada")
+    
+    return {"success": True, "message": "Resposta enviada com sucesso"}
+
 # Include the router in the main app
 app.include_router(api_router)
 
