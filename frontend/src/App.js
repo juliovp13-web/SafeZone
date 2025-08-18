@@ -280,9 +280,11 @@ function App() {
         name: registerForm.name,
         email: registerForm.email,
         password: registerForm.password,
+        state: registerForm.state,
+        city: registerForm.city,
+        neighborhood: registerForm.neighborhood,
         street: registerForm.street,
         number: registerForm.number,
-        neighborhood: registerForm.neighborhood,
         resident_names: registerForm.residentNames.filter(name => name.trim())
       });
       
