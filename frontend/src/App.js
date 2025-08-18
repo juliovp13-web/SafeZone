@@ -1190,7 +1190,7 @@ function App() {
                 ))}
                 
                 <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700">
-                  Completar Cadastro
+                  {t.completeRegistration}
                 </Button>
               </form>
             </CardContent>
