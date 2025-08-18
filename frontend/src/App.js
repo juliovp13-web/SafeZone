@@ -689,7 +689,7 @@ function App() {
     setRegisterForm(prev => ({ ...prev, residentsCount: count, residentNames: newNames }));
   };
 
-  // Render Country Selector with Flags
+  // Render Country Selector with Globe Icon
   const CountrySelector = () => (
     <div className="relative">
       <Button
@@ -697,29 +697,36 @@ function App() {
         size="sm"
         onClick={() => setCountryDropdownOpen(!countryDropdownOpen)}
         className="flex items-center space-x-1 p-2 h-8"
+        title={`${countryInfo.country} (${currentCountry})`}
       >
-        <span className="text-xl">{countryInfo.flag}</span>
+        <span className="text-xl">🌐</span>
         <span className="text-xs font-medium">{currentCountry}</span>
       </Button>
       {countryDropdownOpen && (
-        <div className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-50 border max-h-80 overflow-y-auto">
+        <div className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg z-50 border max-h-80 overflow-y-auto">
           <div className="py-1">
+            <div className="px-4 py-2 text-xs text-gray-500 border-b bg-gray-50">
+              Selecione seu país / Select your country
+            </div>
             {Object.entries(countryMappings).map(([code, info]) => (
               <button
                 key={code}
-                className="w-full px-4 py-2 text-left hover:bg-gray-100 flex items-center justify-between"
+                className="w-full px-4 py-2 text-left hover:bg-blue-50 flex items-center justify-between border-b border-gray-100"
                 onClick={() => {
                   handleCountryChange(code);
                   setCountryDropdownOpen(false);
                 }}
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-3">
                   <span className="text-lg">{info.flag}</span>
-                  <span className="text-sm">{info.country}</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">{info.country}</span>
+                    <span className="text-xs text-gray-500">{info.paymentMethod}</span>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <span className="text-xs text-gray-500">{code}</span>
-                  <span className="text-xs font-medium">{info.currencySymbol}</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-gray-500 font-mono">{code}</span>
+                  <span className="text-xs font-medium text-blue-600">{info.currencySymbol}</span>
                 </div>
               </button>
             ))}
