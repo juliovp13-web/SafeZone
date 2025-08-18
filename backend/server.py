@@ -45,10 +45,12 @@ class User(BaseModel):
     street: str  # Rua (ex: Rua das Flores, Av. Paulista)
     number: str  # Número (ex: 123, 456-A)
     resident_names: List[str]
+    country_code: Optional[str] = "BRA"  # País do usuário
     is_admin: bool = False
     is_vip: bool = False
     vip_expires_at: Optional[datetime] = None  # None = permanent VIP
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_login: Optional[datetime] = None  # Track when user last accessed the app
 
 class UserCreate(BaseModel):
     name: str
