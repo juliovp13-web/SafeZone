@@ -961,15 +961,6 @@ function App() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-neighborhood">Bairro</Label>
-                  <Input
-                    id="reg-neighborhood"
-                    value={registerForm.neighborhood}
-                    onChange={(e) => setRegisterForm(prev => ({ ...prev, neighborhood: e.target.value }))}
-                    required
-                  />
-                </div>
-                <div>
                   <Label htmlFor="residents-count">Número de residentes</Label>
                   <Input
                     id="residents-count"
