@@ -203,6 +203,9 @@ const translations = {
 function App() {
   const [currentScreen, setCurrentScreen] = useState('login');
   const [currentLanguage, setCurrentLanguage] = useState('pt');
+  const [currentCountry, setCurrentCountry] = useState('BRA');
+  const [exchangeRates, setExchangeRates] = useState({});
+  const [countryInput, setCountryInput] = useState('');
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [alerts, setAlerts] = useState([]);
@@ -223,11 +226,13 @@ function App() {
     street: '', number: '', residentsCount: 1, residentNames: ['']
   });
   const [paymentForm, setPaymentForm] = useState({
-    paymentMethod: 'credit-card',
-    cardNumber: '', cardName: '', cardExpiry: '', cardCvv: ''
+    paymentMethod: 'swift-wire',
+    cardNumber: '', cardName: '', cardExpiry: '', cardCvv: '',
+    swiftCode: '', bankName: '', accountNumber: ''
   });
 
   const t = translations[currentLanguage];
+  const countryInfo = countryMappings[currentCountry] || countryMappings['BRA'];
 
   // Authentication check on load
   useEffect(() => {
