@@ -108,9 +108,11 @@ class Alert(BaseModel):
     type: str  # invasão, roubo, emergência
     user_id: str
     user_name: str
+    state: str
+    city: str
+    neighborhood: str
     street: str
     number: str
-    neighborhood: str
     location: Optional[dict] = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     is_active: bool = True
@@ -122,9 +124,11 @@ class AlertResponse(BaseModel):
     id: str
     type: str
     user_name: str
+    state: str
+    city: str
+    neighborhood: str
     street: str
     number: str
-    neighborhood: str
     timestamp: str
     is_active: bool
 
