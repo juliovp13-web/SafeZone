@@ -1522,7 +1522,7 @@ function App() {
                   />
                 </div>
                 <Button type="submit" className="w-full bg-orange-600 hover:bg-orange-700">
-                  🔐 Entrar como Admin
+                  🔐 {t.loginAsAdmin}
                 </Button>
               </form>
               
