@@ -1175,7 +1175,7 @@ function App() {
                 {/* Resident names */}
                 {Array.from({ length: registerForm.residentsCount }, (_, i) => (
                   <div key={i}>
-                    <Label htmlFor={`resident-name-${i + 1}`}>Nome do residente {i + 1}</Label>
+                    <Label htmlFor={`resident-name-${i + 1}`}>{t.residentName} {i + 1}</Label>
                     <Input
                       id={`resident-name-${i + 1}`}
                       value={registerForm.residentNames[i] || ''}
