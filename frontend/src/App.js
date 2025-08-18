@@ -284,7 +284,31 @@ const translations = {
     activeSubscriptions: "Abonnements Actifs",
     totalAlerts: "Total Alertes",
     pendingMessages: "Messages En Attente",
-    adminFullAccess: "Les administrateurs ont un accès complet : Panneau de contrôle, gestion des utilisateurs, messages de support et statut VIP permanent (aucun paiement d'abonnement requis)."
+    adminFullAccess: "Les administrateurs ont un accès complet : Panneau de contrôle, gestion des utilisateurs, messages de support et statut VIP permanent (aucun paiement d'abonnement requis).",
+    // Login/Register page translations
+    adminLogin: "Connexion Admin",
+    adminPanel: "Panneau Administratif",
+    adminEmail: "E-mail Administratif",
+    loginAsAdmin: "Se connecter en tant qu'Admin",
+    adminAccess: "Accès restreint à l'équipe de support",
+    adminDescription: "Accès au panneau de contrôle, messages de support et gestion des utilisateurs",
+    // Registration form translations
+    registerTitle: "Inscription",
+    fullName: "Nom Complet",
+    state: "État/Province",
+    city: "Ville",
+    street: "Rue",
+    number: "Numéro",
+    residentsCount: "Nombre de résidents",
+    residentName: "Nom du résident",
+    completeRegistration: "Terminer l'inscription",
+    // Feature descriptions
+    instantAlerts: "Alertes instantanées d'intrusion, de vol ou d'urgence",
+    exactLocation: "Position exacte de l'incident sur la carte",
+    fullScreenNotifications: "Notifications en plein écran pour une attention maximale",
+    neighborNetwork: "Réseau de voisins unis pour la sécurité",
+    alertHistory: "Historique des alertes pour surveillance",
+    communityHelp: "Aidez-nous à maintenir la meilleure application de sécurité jamais créée. Votre abonnement garde la technologie active et protège toute la communauté."
   },
   it: {
     appName: "SafeZone",
