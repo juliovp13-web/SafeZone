@@ -1111,7 +1111,7 @@ function App() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="reg-state">Estado</Label>
+                  <Label htmlFor="reg-state">{t.state}</Label>
                   <Input
                     id="reg-state"
                     value={registerForm.state}
