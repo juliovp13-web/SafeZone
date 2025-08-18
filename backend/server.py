@@ -82,7 +82,7 @@ class UserResponse(BaseModel):
 class Subscription(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
-    payment_method: str  # credit-card, pix, boleto
+    payment_method: str  # credit-card, pix, boleto, swift-wire
     status: str = "trial"  # trial, active, overdue, blocked, cancelled, expired
     start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     trial_end_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=30))
