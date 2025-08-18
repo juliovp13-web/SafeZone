@@ -71,13 +71,18 @@ class Subscription(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     user_id: str
     payment_method: str  # credit-card, pix, boleto
-    status: str = "active"  # active, cancelled, expired
+    status: str = "trial"  # trial, active, overdue, blocked, cancelled, expired
     start_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-    next_payment: datetime
+    trial_end_date: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=30))
+    next_payment: datetime = Field(default_factory=lambda: datetime.now(timezone.utc) + timedelta(days=30))
+    payment_due_date: Optional[datetime] = None  # Data limite para pagamento (trial_end + 5 dias)
+    grace_period_end: Optional[datetime] = None  # Fim do período de graça
     is_trial: bool = True
     amount: float = 30.00
     billing_cycle: str = "monthly"
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    last_payment_date: Optional[datetime] = None
+    blocked_at: Optional[datetime] = None
 
 class SubscriptionCreate(BaseModel):
     payment_method: str
