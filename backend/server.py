@@ -865,10 +865,12 @@ async def get_all_users(current_admin: User = Depends(get_current_admin)):
     response_users = []
     for user in users:
         user = parse_from_mongo(user)
+        full_address = f"{user['street']}, {user['number']}, {user['neighborhood']}, {user.get('city', 'São Paulo')} - {user.get('state', 'SP')}"
         response_users.append({
             "id": user["id"],
             "name": user["name"],
             "email": user["email"],
+            "address": full_address,
             "neighborhood": user["neighborhood"],
             "is_admin": user.get("is_admin", False),
             "is_vip": user.get("is_vip", False),
