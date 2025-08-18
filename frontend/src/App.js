@@ -253,6 +253,80 @@ function App() {
     }
   };
 
+  // Fetch emergency notifications
+  const fetchEmergencyNotifications = async () => {
+    try {
+      const response = await axios.get(`${API}/emergency-notifications`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setEmergencyNotifications(response.data);
+      
+      // Play alarm sound if there are new emergency notifications
+      if (response.data.length > 0) {
+        playAlarmSound();
+      }
+    } catch (error) {
+      console.error('Failed to fetch emergency notifications:', error);
+    }
+  };
+
+  // Play alarm sound for emergency
+  const playAlarmSound = () => {
+    try {
+      // Create an audio element with emergency sound
+      const audio = new Audio('/alarm.mp3'); // You'd need to add this file
+      audio.loop = true;
+      audio.volume = 0.8;
+      
+      // For web compatibility, use a frequency-based alarm
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      
+      oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      
+      oscillator.start();
+      
+      // Alternate frequencies for alarm effect
+      let isHighFreq = true;
+      const alarmInterval = setInterval(() => {
+        oscillator.frequency.setValueAtTime(
+          isHighFreq ? 800 : 400, 
+          audioContext.currentTime
+        );
+        isHighFreq = !isHighFreq;
+      }, 500);
+      
+      setAlarmSound({ oscillator, interval: alarmInterval, audioContext });
+      
+      // Auto-stop after 30 seconds
+      setTimeout(() => {
+        stopAlarmSound();
+      }, 30000);
+      
+    } catch (error) {
+      console.error('Could not play alarm sound:', error);
+    }
+  };
+
+  // Stop alarm sound
+  const stopAlarmSound = () => {
+    if (alarmSound) {
+      try {
+        alarmSound.oscillator.stop();
+        clearInterval(alarmSound.interval);
+        alarmSound.audioContext.close();
+        setAlarmSound(null);
+      } catch (error) {
+        console.error('Error stopping alarm:', error);
+      }
+    }
+  };
+
   // Handle login
   const handleLogin = async (e) => {
     e.preventDefault();
