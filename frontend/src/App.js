@@ -339,7 +339,31 @@ const translations = {
     activeSubscriptions: "Abbonamenti Attivi",
     totalAlerts: "Totale Avvisi",
     pendingMessages: "Messaggi In Sospeso",
-    adminFullAccess: "Gli amministratori hanno accesso completo: Pannello di controllo, gestione utenti, messaggi di supporto e stato VIP permanente (nessun pagamento di abbonamento richiesto)."
+    adminFullAccess: "Gli amministratori hanno accesso completo: Pannello di controllo, gestione utenti, messaggi di supporto e stato VIP permanente (nessun pagamento di abbonamento richiesto).",
+    // Login/Register page translations
+    adminLogin: "Login Admin",
+    adminPanel: "Pannello Amministrativo",
+    adminEmail: "Email Amministrativo",
+    loginAsAdmin: "Accedi come Admin",
+    adminAccess: "Accesso riservato al team di supporto",
+    adminDescription: "Accesso al pannello di controllo, messaggi di supporto e gestione utenti",
+    // Registration form translations
+    registerTitle: "Registrazione",
+    fullName: "Nome Completo",
+    state: "Stato/Provincia",
+    city: "Città",
+    street: "Via",
+    number: "Numero",
+    residentsCount: "Numero di residenti",
+    residentName: "Nome del residente",
+    completeRegistration: "Completa Registrazione",
+    // Feature descriptions
+    instantAlerts: "Avvisi istantanei di irruzione, rapina o emergenza",
+    exactLocation: "Posizione esatta dell'incidente sulla mappa",
+    fullScreenNotifications: "Notifiche a schermo intero per massima attenzione",
+    neighborNetwork: "Rete di vicini uniti per la sicurezza",
+    alertHistory: "Cronologia avvisi per monitoraggio",
+    communityHelp: "Aiutaci a mantenere la migliore app di sicurezza mai creata. Il tuo abbonamento mantiene la tecnologia attiva e protegge tutta la comunità."
   }
 };
 
