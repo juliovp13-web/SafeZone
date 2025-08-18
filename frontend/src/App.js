@@ -1035,28 +1035,28 @@ function App() {
               <div className="space-y-3 text-sm">
                 <div className="flex items-start">
                   <Shield className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Alertas instantâneos de invasão, roubo ou emergência</span>
+                  <span>{t.instantAlerts}</span>
                 </div>
                 <div className="flex items-start">
                   <MapPin className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Localização exata da ocorrência no mapa</span>
+                  <span>{t.exactLocation}</span>
                 </div>
                 <div className="flex items-start">
                   <Bell className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Notificações em tela cheia para máxima atenção</span>
+                  <span>{t.fullScreenNotifications}</span>
                 </div>
                 <div className="flex items-start">
                   <Users className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Rede de vizinhos unidos pela segurança</span>
+                  <span>{t.neighborNetwork}</span>
                 </div>
                 <div className="flex items-start">
                   <BarChart3 className="w-4 h-4 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
-                  <span>Histórico de alertas para acompanhamento</span>
+                  <span>{t.alertHistory}</span>
                 </div>
               </div>
               
               <p className="text-xs text-gray-500 mt-4 text-center">
-                💬 Ajude-nos a manter o melhor aplicativo de segurança já criado. Sua assinatura mantém a tecnologia ativa e protege toda a comunidade.
+                💬 {t.communityHelp}
               </p>
             </CardContent>
           </Card>
