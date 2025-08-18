@@ -694,7 +694,10 @@ async def get_profile(current_user: User = Depends(get_current_user)):
         street=current_user.street,
         number=current_user.number,
         neighborhood=current_user.neighborhood,
-        resident_names=current_user.resident_names
+        resident_names=current_user.resident_names,
+        is_admin=current_user.is_admin,
+        is_vip=current_user.is_vip,
+        vip_expires_at=current_user.vip_expires_at.isoformat() if current_user.vip_expires_at else None
     )
 
 # Include the router in the main app
