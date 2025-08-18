@@ -119,6 +119,9 @@
         - working: true
           agent: "testing"
           comment: "✅ TESTADO COM SUCESSO: Registro de usuário funciona corretamente (POST /api/register), retorna JWT token válido. Login funciona (POST /api/login), autentica credenciais corretas e rejeita inválidas (401). Token JWT é validado corretamente em endpoints protegidos. Perfil do usuário é retornado corretamente com todos os campos necessários."
+        - working: true
+          agent: "testing"
+          comment: "✅ TESTE ESPECÍFICO REVIEW REQUEST APROVADO: Login admin com credenciais julio.csds@hotmail.com / Corinthians12@@@ funcionando perfeitamente. POST /api/login retorna access_token (JWT válido), user object com is_admin=true, is_vip=true, e user.email=julio.csds@hotmail.com conforme solicitado. Sistema de admin automático detecta email especial e aplica privilégios automaticamente. JWT token validado com sucesso via GET /api/profile. Sistema 100% funcional para o proprietário usar."
 
   - task: "Endpoint de Criação de Assinatura (/api/create-subscription)"
     implemented: true
