@@ -32,18 +32,39 @@ import './App.css';
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-// Country mappings to language and currency
+// Country mappings to language and currency - Extended list
 const countryMappings = {
-  'BRA': { lang: 'pt', currency: 'BRL', currencySymbol: 'R$', country: 'Brazil', paymentMethod: 'PIX/Boleto' },
-  'EUA': { lang: 'en', currency: 'USD', currencySymbol: '$', country: 'United States', paymentMethod: 'SWIFT Wire' },
-  'ESP': { lang: 'es', currency: 'EUR', currencySymbol: '€', country: 'Spain', paymentMethod: 'SWIFT Wire' },
-  'PHP': { lang: 'en', currency: 'PHP', currencySymbol: '₱', country: 'Philippines', paymentMethod: 'SWIFT Wire' },
-  'ARG': { lang: 'es', currency: 'ARS', currencySymbol: '$', country: 'Argentina', paymentMethod: 'SWIFT Wire' },
-  'MEX': { lang: 'es', currency: 'MXN', currencySymbol: '$', country: 'Mexico', paymentMethod: 'SWIFT Wire' },
-  'CAN': { lang: 'en', currency: 'CAD', currencySymbol: 'C$', country: 'Canada', paymentMethod: 'SWIFT Wire' },
-  'DEU': { lang: 'de', currency: 'EUR', currencySymbol: '€', country: 'Germany', paymentMethod: 'SWIFT Wire' },
-  'FRA': { lang: 'fr', currency: 'EUR', currencySymbol: '€', country: 'France', paymentMethod: 'SWIFT Wire' },
-  'ITA': { lang: 'it', currency: 'EUR', currencySymbol: '€', country: 'Italy', paymentMethod: 'SWIFT Wire' }
+  'BRA': { lang: 'pt', currency: 'BRL', currencySymbol: 'R$', country: 'Brazil', flag: '🇧🇷', paymentMethod: 'PIX/Boleto' },
+  'EUA': { lang: 'en', currency: 'USD', currencySymbol: '$', country: 'United States', flag: '🇺🇸', paymentMethod: 'SWIFT Wire' },
+  'ESP': { lang: 'es', currency: 'EUR', currencySymbol: '€', country: 'Spain', flag: '🇪🇸', paymentMethod: 'SWIFT Wire' },
+  'PHP': { lang: 'en', currency: 'PHP', currencySymbol: '₱', country: 'Philippines', flag: '🇵🇭', paymentMethod: 'SWIFT Wire' },
+  'ARG': { lang: 'es', currency: 'ARS', currencySymbol: '$', country: 'Argentina', flag: '🇦🇷', paymentMethod: 'SWIFT Wire' },
+  'MEX': { lang: 'es', currency: 'MXN', currencySymbol: '$', country: 'Mexico', flag: '🇲🇽', paymentMethod: 'SWIFT Wire' },
+  'CAN': { lang: 'en', currency: 'CAD', currencySymbol: 'C$', country: 'Canada', flag: '🇨🇦', paymentMethod: 'SWIFT Wire' },
+  'DEU': { lang: 'de', currency: 'EUR', currencySymbol: '€', country: 'Germany', flag: '🇩🇪', paymentMethod: 'SWIFT Wire' },
+  'FRA': { lang: 'fr', currency: 'EUR', currencySymbol: '€', country: 'France', flag: '🇫🇷', paymentMethod: 'SWIFT Wire' },
+  'ITA': { lang: 'it', currency: 'EUR', currencySymbol: '€', country: 'Italy', flag: '🇮🇹', paymentMethod: 'SWIFT Wire' },
+  'GBR': { lang: 'en', currency: 'GBP', currencySymbol: '£', country: 'United Kingdom', flag: '🇬🇧', paymentMethod: 'SWIFT Wire' },
+  'JPN': { lang: 'en', currency: 'JPY', currencySymbol: '¥', country: 'Japan', flag: '🇯🇵', paymentMethod: 'SWIFT Wire' },
+  'KOR': { lang: 'en', currency: 'KRW', currencySymbol: '₩', country: 'South Korea', flag: '🇰🇷', paymentMethod: 'SWIFT Wire' },
+  'AUS': { lang: 'en', currency: 'AUD', currencySymbol: 'A$', country: 'Australia', flag: '🇦🇺', paymentMethod: 'SWIFT Wire' },
+  'CHN': { lang: 'en', currency: 'CNY', currencySymbol: '¥', country: 'China', flag: '🇨🇳', paymentMethod: 'SWIFT Wire' },
+  'IND': { lang: 'en', currency: 'INR', currencySymbol: '₹', country: 'India', flag: '🇮🇳', paymentMethod: 'SWIFT Wire' },
+  'RUS': { lang: 'en', currency: 'RUB', currencySymbol: '₽', country: 'Russia', flag: '🇷🇺', paymentMethod: 'SWIFT Wire' },
+  'ZAF': { lang: 'en', currency: 'ZAR', currencySymbol: 'R', country: 'South Africa', flag: '🇿🇦', paymentMethod: 'SWIFT Wire' },
+  'NLD': { lang: 'en', currency: 'EUR', currencySymbol: '€', country: 'Netherlands', flag: '🇳🇱', paymentMethod: 'SWIFT Wire' },
+  'CHE': { lang: 'de', currency: 'CHF', currencySymbol: 'Fr', country: 'Switzerland', flag: '🇨🇭', paymentMethod: 'SWIFT Wire' },
+  'SWE': { lang: 'en', currency: 'SEK', currencySymbol: 'kr', country: 'Sweden', flag: '🇸🇪', paymentMethod: 'SWIFT Wire' },
+  'NOR': { lang: 'en', currency: 'NOK', currencySymbol: 'kr', country: 'Norway', flag: '🇳🇴', paymentMethod: 'SWIFT Wire' },
+  'DNK': { lang: 'en', currency: 'DKK', currencySymbol: 'kr', country: 'Denmark', flag: '🇩🇰', paymentMethod: 'SWIFT Wire' },
+  'FIN': { lang: 'en', currency: 'EUR', currencySymbol: '€', country: 'Finland', flag: '🇫🇮', paymentMethod: 'SWIFT Wire' },
+  'SGP': { lang: 'en', currency: 'SGD', currencySymbol: 'S$', country: 'Singapore', flag: '🇸🇬', paymentMethod: 'SWIFT Wire' },
+  'HKG': { lang: 'en', currency: 'HKD', currencySymbol: 'HK$', country: 'Hong Kong', flag: '🇭🇰', paymentMethod: 'SWIFT Wire' },
+  'NZL': { lang: 'en', currency: 'NZD', currencySymbol: 'NZ$', country: 'New Zealand', flag: '🇳🇿', paymentMethod: 'SWIFT Wire' },
+  'BEL': { lang: 'fr', currency: 'EUR', currencySymbol: '€', country: 'Belgium', flag: '🇧🇪', paymentMethod: 'SWIFT Wire' },
+  'AUT': { lang: 'de', currency: 'EUR', currencySymbol: '€', country: 'Austria', flag: '🇦🇹', paymentMethod: 'SWIFT Wire' },
+  'PRT': { lang: 'pt', currency: 'EUR', currencySymbol: '€', country: 'Portugal', flag: '🇵🇹', paymentMethod: 'SWIFT Wire' },
+  'POL': { lang: 'en', currency: 'PLN', currencySymbol: 'zł', country: 'Poland', flag: '🇵🇱', paymentMethod: 'SWIFT Wire' }
 };
 
 // Translation strings
