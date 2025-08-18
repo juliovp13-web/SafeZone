@@ -292,6 +292,9 @@ function App() {
       setCurrentCountry(upperCode);
       setCurrentLanguage(countryMappings[upperCode].lang);
       
+      // Update registerForm country_code
+      setRegisterForm(prev => ({ ...prev, country_code: upperCode }));
+      
       // Update payment method based on country
       if (upperCode === 'BRA') {
         setPaymentForm(prev => ({ ...prev, paymentMethod: 'pix' }));
