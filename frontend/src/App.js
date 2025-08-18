@@ -1161,7 +1161,7 @@ function App() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="residents-count">Número de residentes</Label>
+                  <Label htmlFor="residents-count">{t.residentsCount}</Label>
                   <Input
                     id="residents-count"
                     type="number"
