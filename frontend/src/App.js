@@ -579,11 +579,42 @@ function App() {
                   />
                 </div>
                 <div>
+                  <Label htmlFor="reg-state">Estado</Label>
+                  <Input
+                    id="reg-state"
+                    value={registerForm.state}
+                    onChange={(e) => setRegisterForm(prev => ({ ...prev, state: e.target.value }))}
+                    placeholder="Ex: SP, RJ, MG"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="reg-city">Cidade</Label>
+                  <Input
+                    id="reg-city"
+                    value={registerForm.city}
+                    onChange={(e) => setRegisterForm(prev => ({ ...prev, city: e.target.value }))}
+                    placeholder="Ex: São Paulo, Rio de Janeiro"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="reg-neighborhood">Bairro</Label>
+                  <Input
+                    id="reg-neighborhood"
+                    value={registerForm.neighborhood}
+                    onChange={(e) => setRegisterForm(prev => ({ ...prev, neighborhood: e.target.value }))}
+                    placeholder="Ex: Vila Olímpia, Copacabana"
+                    required
+                  />
+                </div>
+                <div>
                   <Label htmlFor="reg-street">Rua</Label>
                   <Input
                     id="reg-street"
                     value={registerForm.street}
                     onChange={(e) => setRegisterForm(prev => ({ ...prev, street: e.target.value }))}
+                    placeholder="Ex: Rua das Flores, Av. Paulista"
                     required
                   />
                 </div>
