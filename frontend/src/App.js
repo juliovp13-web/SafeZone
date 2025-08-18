@@ -799,7 +799,7 @@ function App() {
       <div className="fixed inset-0 bg-gray-900 text-white z-50 flex flex-col items-center justify-center p-6 animate-pulse">
         <div className="text-center max-w-md">
           <div className="mb-6">
-            {activeAlert.type === 'invasão' && <UserSecret className="w-24 h-24 mx-auto text-red-500 animate-bounce" />}
+            {activeAlert.type === 'invasão' && <User className="w-24 h-24 mx-auto text-red-500 animate-bounce" />}
             {activeAlert.type === 'roubo' && <Mask className="w-24 h-24 mx-auto text-orange-500 animate-bounce" />}
             {activeAlert.type === 'emergência' && <AlertTriangle className="w-24 h-24 mx-auto text-yellow-500 animate-bounce" />}
           </div>
