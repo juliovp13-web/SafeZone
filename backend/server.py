@@ -43,6 +43,9 @@ class User(BaseModel):
     number: str
     neighborhood: str
     resident_names: List[str]
+    is_admin: bool = False
+    is_vip: bool = False
+    vip_expires_at: Optional[datetime] = None  # None = permanent VIP
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class UserCreate(BaseModel):
