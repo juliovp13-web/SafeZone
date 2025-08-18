@@ -401,6 +401,12 @@ async def login_user(login_data: UserLogin):
             user_doc["is_vip"] = True
             user_doc["vip_expires_at"] = None
     
+    # Update last_login timestamp
+    await db.users.update_one(
+        {"email": login_data.email},
+        {"$set": {"last_login": datetime.now(timezone.utc)}}
+    )
+    
     # Create access token
     access_token = create_access_token(data={"sub": user_doc["id"]})
     
