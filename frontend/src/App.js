@@ -280,7 +280,23 @@ function App() {
         PHP: 56.5,
         ARS: 365.0,
         MXN: 17.8,
-        CAD: 1.35
+        CAD: 1.35,
+        GBP: 0.73,
+        JPY: 150.0,
+        KRW: 1320.0,
+        AUD: 1.52,
+        CNY: 7.25,
+        INR: 83.2,
+        RUB: 92.5,
+        ZAR: 18.8,
+        CHF: 0.88,
+        SEK: 10.9,
+        NOK: 10.8,
+        DKK: 6.9,
+        SGD: 1.34,
+        HKD: 7.8,
+        NZD: 1.64,
+        PLN: 4.1
       });
     }
   };
