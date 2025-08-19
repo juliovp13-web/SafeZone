@@ -1546,6 +1546,8 @@ function App() {
       token={token} 
       handleLogout={handleLogout}
       API={API}
+      t={t}
+      countryInfo={countryInfo}
     />;
   }
 
