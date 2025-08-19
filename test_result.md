@@ -365,6 +365,8 @@
         - working: "NA"
           agent: "main"
           comment: "Reorganizado arquivo countries.js com países em ordem alfabética por nome do país. Mantido Brasil como padrão com PIX/Boleto e demais países com SWIFT Wire."
+
+## agent_communication:
     - agent: "main"
       message: "Aplicativo SafeZone identificado como sistema de segurança comunitária com funcionalidade de assinatura mensal R$30. Sistema completo implementado: backend FastAPI + frontend React + MongoDB. Todos os serviços estão rodando. Pronto para testar fluxo completo de pagamentos (auth -> subscription -> payment methods). Focar em testar: 1) Registro/login de usuários 2) Criação de assinatura 3) Métodos de pagamento (cartão, PIX, boleto) 4) Respostas da API"
     - agent: "testing"
