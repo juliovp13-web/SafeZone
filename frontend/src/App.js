@@ -1555,7 +1555,7 @@ function App() {
 }
 
 // Admin Dashboard Component
-function AdminDashboard({ user, token, handleLogout, API }) {
+function AdminDashboard({ user, token, handleLogout, API, t, countryInfo }) {
   const [activeTab, setActiveTab] = useState('stats');
   const [stats, setStats] = useState(null);
   const [users, setUsers] = useState([]);
