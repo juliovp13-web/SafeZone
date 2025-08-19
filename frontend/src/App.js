@@ -399,7 +399,7 @@ function App() {
     swiftCode: '', bankName: '', accountNumber: ''
   });
 
-  const t = translations[currentLanguage];
+  const t = translations[currentLanguage] || translations['pt'];
   const countryInfo = countryMappings[currentCountry] || countryMappings['BRA'];
 
   // Fetch exchange rates on load
