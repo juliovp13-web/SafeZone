@@ -297,6 +297,9 @@
         - working: "NA"
           agent: "main"
           comment: "Removido campo bairro duplicado no formulário de cadastro (linhas 942-949). Agora há apenas um campo bairro."
+        - working: "NA"
+          agent: "main"
+          comment: "Corrigido para usar tradução {t.neighborhood} no lugar de texto hardcoded 'Bairro'."
 
   - task: "Sistema Seletor de País com Bandeiras"
     implemented: true
